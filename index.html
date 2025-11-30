@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmin Calin - IT Cloud Engineer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-size: 14px; }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Mobile-first responsive design */
+        @media (max-width: 640px) {
+            body { font-size: 13px; }
+            .container { padding: 0.75rem; }
+            h1 { font-size: 1.875rem !important; }
+            h2 { font-size: 1.25rem !important; }
+            h3 { font-size: 1.125rem !important; }
+            .profile-img { width: 120px !important; height: 120px !important; }
+            .tab-button { padding: 0.5rem 0.75rem !important; font-size: 0.875rem !important; }
+            .card-padding { padding: 1rem !important; }
+        }
+        
+        /* Custom scrollbar for mobile */
+        .tab-container::-webkit-scrollbar { height: 4px; }
+        .tab-container::-webkit-scrollbar-track { background: #f1f5f9; }
+        .tab-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        
+        /* Contact form styles */
+        .contact-form { max-width: 500px; margin: 0 auto; }
+        .form-input { transition: all 0.3s ease; }
+        .form-input:focus { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
+        /* Social link styles */
+        .social-link { display: flex; align-items: center; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; }
+        .social-link:hover { background-color: #f3f4f6; transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, createElement } = React;
+        
+        // Create icon components using lucide.createElement
+        const createIcon = (iconName) => (props) => {
+            return React.createElement('i', {
+                ...props,
+                dangerouslySetInnerHTML: { __html: lucide.icons[iconName] }
+            });
+        };
+        
+        // Simple SVG icon components
+        const Briefcase = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="m16 21-4-4-4 4"></path>
+                <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"></path>
+            </svg>
+        );
+        
+        const GraduationCap = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
+                <path d="M22 10v6"></path>
+                <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+            </svg>
+        );
+        
+        const Home = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9,22 9,12 15,12 15,22"></polyline>
+            </svg>
+        );
+        
+        const Heart = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"></path>
+            </svg>
+        );
+        
+        const Link = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+        );
+        
+        const Github = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+        );
+        
+        const Linkedin = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+        );
+        
+        const XIcon = (props) => (
+            <svg className={props.className} fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+            </svg>
+        );
+        
+        const Instagram = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+        );
+        
+        const Youtube = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>
+                <polygon points="10,15 15,12 10,9"></polygon>
+            </svg>
+        );
+        
+        const Reddit = (props) => (
+            <svg className={props.className} fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"></path>
+            </svg>
+        );
+        
+        const VSCO = (props) => (
+            <svg className={props.className} fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm6.624 18.624C16.8 20.448 14.496 21.6 12 21.6s-4.8-1.152-6.624-2.976S2.4 14.496 2.4 12s1.152-4.8 2.976-6.624S9.504 2.4 12 2.4s4.8 1.152 6.624 2.976S21.6 9.504 21.6 12s-1.152 4.8-2.976 6.624zM12 6c-3.312 0-6 2.688-6 6s2.688 6 6 6 6-2.688 6-6-2.688-6-6-6zm0 9.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path>
+            </svg>
+        );
+        
+        const Tumblr = (props) => (
+            <svg className={props.className} fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"></path>
+            </svg>
+        );
+        
+        const Pinterest = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        );
+        
+        const Facebook = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+        );
+        
+        const Twitter = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+            </svg>
+        );
+        
+        const LayoutGrid = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+        );
+        
+        const FileText = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14,2 14,8 20,8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+        );
+        
+        const User = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        );
+        
+        const Users = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="m22 21-3.5-3.5"></path>
+                <circle cx="22" cy="15" r="4"></circle>
+            </svg>
+        );
+        
+        const Image = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="9" cy="9" r="2"></circle>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+            </svg>
+        );
+        
+        const ExternalLink = (props) => (
+            <svg className={props.className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M15 3h6v6"></path>
+                <path d="M10 14 21 3"></path>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            </svg>
+        );
+
+        const Card = ({ children, className = "" }) => (
+            <div className={`bg-white rounded-lg p-4 sm:p-6 shadow-md ${className}`}>
+                {children}
+            </div>
+        );
+
+        const SocialLink = ({ Icon, href, label, username, showLabel = false }) => {
+            const [showPopup, setShowPopup] = useState(false);
+
+            return (
+                <div className="relative">
+                    <a 
+                        href={href}
+                        className={`social-link text-gray-600 hover:text-blue-500 transition-colors duration-200 ${showLabel ? 'flex items-center' : ''}`}
+                        onMouseEnter={() => setShowPopup(true)}
+                        onMouseLeave={() => setShowPopup(false)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        {showLabel && <span className="ml-2 text-sm font-medium">{label}</span>}
+                    </a>
+                    {showPopup && !showLabel && (
+                        <div className="absolute z-10 w-48 px-2 py-1 mt-2 text-sm font-semibold text-gray-500 bg-white border rounded-md shadow-md">
+                            {label}: {username}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const ImageModal = ({ src, alt, onClose }) => (
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onClick={onClose}>
+                <img src={src} alt={alt} className="max-w-full max-h-full object-contain" />
+            </div>
+        );
+
+        const GalleryItem = ({ src, alt, onClick }) => (
+            <div className="relative group overflow-hidden rounded-lg">
+                <img
+                    src={src}
+                    alt={alt}
+                    className="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button
+                        onClick={onClick}
+                        className="bg-white text-gray-800 px-4 py-2 rounded-full flex items-center transition-transform duration-300 transform translate-y-4 group-hover:translate-y-0"
+                    >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Larger
+                    </button>
+                </div>
+            </div>
+        );
+
+        const ProfilePage = () => {
+            const [activeTab, setActiveTab] = useState('about');
+            const [modalImage, setModalImage] = useState(null);
+
+            const openModal = (src, alt) => {
+                setModalImage({ src, alt });
+            };
+
+            const closeModal = () => {
+                setModalImage(null);
+            };
+
+            return (
+                <div className="bg-gray-100 min-h-screen">
+                    {/* Header with banner - Using your background image */}
+                    <header className="relative h-48 sm:h-64 bg-gradient-to-r from-blue-600 to-purple-600">
+                        {/* Your background image as banner */}
+                        <img src="assets/profile/background.jpg" alt="Background Banner" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-gray-100 to-transparent"></div>
+                    </header>
+
+                    <main className="container mx-auto px-4 sm:px-6 relative -mt-16 sm:-mt-24">
+                        <div className="flex flex-col sm:flex-row items-center mb-4 sm:mb-6">
+                            {/* Profile image - Using actual photo */}
+                            <img
+                                src="assets/profile/profile.jpg"
+                                alt="Cosmin Calin Profile"
+                                className="profile-img w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white mb-4 sm:mb-0 sm:mr-6 cursor-pointer shadow-lg"
+                                onClick={() => openModal("assets/profile/profile.jpg", "Cosmin Calin - Profile Picture")}
+                            />
+                            <div className="text-center sm:text-left">
+                                <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">Cosmin Calin</h1>
+                            </div>
+                        </div>
+
+                        <Card className="mb-8">
+                            <p className="text-gray-700 mb-4">
+                                Using 02 everyday
+                            </p>
+                            <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-gray-600">
+                                <div className="flex items-center">
+                                    <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                                    <span>IT Cloud Engineer</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                                    <span>Born on 06/04/2001</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Home className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                                    <span>Near Barcelona, Spain</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                                    <span>Car lover & weekend driver</span>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-3 sm:gap-4">
+                                <SocialLink Icon={Instagram} href="https://instagram.com/cosmingln" label="Instagram" username="@cosmingln" />
+                                <SocialLink Icon={Youtube} href="https://youtube.com/@cosmingln" label="YouTube" username="@cosmingln" />
+                                <SocialLink Icon={Github} href="https://github.com/cosmincaliin" label="GitHub" username="@cosmincaliin" />
+                                <SocialLink Icon={Linkedin} href="https://linkedin.com/in/cosmincaliin" label="LinkedIn" username="cosmincaliin" />
+                                <SocialLink Icon={XIcon} href="https://x.com/cosmincaliin" label="X" username="@cosmincaliin" />
+                            </div>
+                        </Card>
+
+                        <div className="mb-6 sm:mb-8">
+                            <div className="tab-container flex border-b overflow-x-auto">
+                                <button
+                                    className={`tab-button px-3 py-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap ${activeTab === 'about' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'}`}
+                                    onClick={() => setActiveTab('about')}
+                                >
+                                    <User className="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-1" />
+                                    About
+                                </button>
+                                <button
+                                    className={`tab-button px-3 py-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap ${activeTab === 'experience' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'}`}
+                                    onClick={() => setActiveTab('experience')}
+                                >
+                                    <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-1" />
+                                    Experience
+                                </button>
+                                <button
+                                    className={`tab-button px-3 py-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap ${activeTab === 'contact' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'}`}
+                                    onClick={() => setActiveTab('contact')}
+                                >
+                                    <Link className="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-1" />
+                                    Contact
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* About Tab - Profile, Bio, Gallery, Projects, Car Projects */}
+                        {activeTab === 'about' && (
+                            <div className="animate-fade-in space-y-6">
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Personal Bio</h2>
+                                    <p className="text-gray-700 mb-4 text-sm sm:text-base">
+                                        Hey! I'm Cosmin, a passionate System Administrator and IT professional based in Tarragona, Spain. 
+                                        With over 2 years of experience serving as SysAdmin, IT Service Manager, and Support Technician, 
+                                        I bring a robust foundation of knowledge and expertise to modern IT infrastructure challenges.
+                                    </p>
+                                    <p className="text-gray-700 mb-4 text-sm sm:text-base">
+                                        I specialize in managing complex IT systems including Oracle, MySQL, PostgreSQL databases, 
+                                        deploying applications on Tomcat, WebLogic, Apache, and IIS servers, and automating workflows 
+                                        with tools like Ansible, Docker, and custom Bash/JavaScript scripts. My experience spans 
+                                        from Linux/Windows server administration to cloud platforms like Azure, AWS, and Google Cloud.
+                                    </p>
+                                    <p className="text-gray-700 text-sm sm:text-base">
+                                        When I'm not managing servers and databases, I'm usually thinking about cars - driving them, 
+                                        working on them, or planning my next modification. I love the hands-on aspect of basic 
+                                        mechanics and the thrill of feeling how small changes can improve performance. Whether it's 
+                                        a weekend drive on scenic routes or tinkering with upgrades, cars are my escape and passion.
+                                    </p>
+                                </Card>
+                                
+                                {/* Personal Gallery - Temporarily Hidden
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Personal Gallery</h2>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        Replace the placeholder images below with your own photos. Upload them to your server 
+                                        or use a service like Imgur, and update the URLs in the code.
+                                    </p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                                        {[
+                                            "Travel Adventures",
+                                            "Car Photography", 
+                                            "Tech Setups",
+                                            "Barcelona Life",
+                                            "Coding Sessions",
+                                            "Weekend Projects"
+                                        ].map((item, index) => (
+                                            <GalleryItem
+                                                key={index}
+                                                src={`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%236366F1'/%3E%3Ctext x='150' y='160' font-family='Arial' font-size='16' fill='white' text-anchor='middle'%3E${item.replace(/\s+/g, '%20')}%3C/text%3E%3C/svg%3E`}
+                                                alt={item}
+                                                onClick={() => openModal(`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Crect width='600' height='600' fill='%236366F1'/%3E%3Ctext x='300' y='320' font-family='Arial' font-size='32' fill='white' text-anchor='middle'%3E${item.replace(/\s+/g, '%20')}%3C/text%3E%3C/svg%3E`, item)}
+                                            />
+                                        ))}
+                                    </div>
+                                </Card>
+                                */}
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Personal Projects</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {[
+                                            { 
+                                                title: "Privacy-Focused Chat Converter", 
+                                                desc: "Client-side web application for converting chat exports between WhatsApp and Telegram without server processing", 
+                                                tech: "Vanilla JavaScript, Web APIs, Privacy-First Design",
+                                                link: "https://chat-exporter.robyrew.com"
+                                            },
+                                            { 
+                                                title: "VPS Infrastructure Automation", 
+                                                desc: "Complete IONOS VPS deployment using Ansible with Docker orchestration and monitoring", 
+                                                tech: "Ansible, Docker, Nginx Proxy Manager, Grafana",
+                                                link: "https://monitoring.robyrew.com"
+                                            }
+                                        ].map((project, index) => (
+                                            <div key={index} className="border border-gray-200 rounded-lg p-4">
+                                                <h3 className="font-semibold mb-2 text-sm sm:text-base">{project.title}</h3>
+                                                <p className="text-gray-600 mb-3 text-xs sm:text-sm">{project.desc}</p>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-xs text-gray-500">{project.tech}</span>
+                                                    <a href={project.link} className="text-blue-500 hover:underline text-xs sm:text-sm" target="_blank" rel="noopener noreferrer">View Live</a>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">My Passion for Cars</h2>
+                                    <p className="text-gray-700 mb-4 text-sm sm:text-base">
+                                        Cars aren't just transportation for me - they're a genuine passion that gets me excited every day. 
+                                        I love everything about them: the sound of a well-tuned engine, the feeling of a smooth gear shift, 
+                                        and the satisfaction of making a modification that actually improves how the car drives.
+                                    </p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <h3 className="font-semibold text-blue-600 mb-2 text-sm sm:text-base">What I Love Doing</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>Weekend drives and discovering new routes</li>
+                                                <li>Track days - pure adrenaline and learning</li>
+                                                <li>Basic maintenance: oil changes, filters, brake pads</li>
+                                                <li>Simple modifications like air intakes, exhausts</li>
+                                                <li>Learning from car communities and forums</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-green-600 mb-2 text-sm sm:text-base">Current Projects & Goals</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>Learning ECU tuning basics with OBD tools</li>
+                                                <li>Suspension tweaks for better handling</li>
+                                                <li>Planning my next exhaust upgrade</li>
+                                                <li>Saving up for coilovers</li>
+                                                <li>Maybe a turbo project car someday!</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 p-4 bg-orange-50 rounded-lg">
+                                        <p className="text-sm text-orange-700">
+                                            <strong>Real talk:</strong> I'm not a professional mechanic or racing driver - I'm just a guy who 
+                                            genuinely loves cars and enjoys learning through hands-on experience. Every mistake teaches me 
+                                            something new, and every successful mod feels like a victory. The car community has been amazing 
+                                            in sharing knowledge and helping beginners like me avoid costly mistakes!
+                                        </p>
+                                    </div>
+                                </Card>
+                            </div>
+                        )}
+
+                        {/* Experience Tab - Resume, Career, Education, Skills, Achievements */}
+                        {activeTab === 'experience' && (
+                            <div className="animate-fade-in space-y-6">
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Professional Experience</h2>
+                                    
+                                    <div className="mb-6">
+                                        <h3 className="font-semibold text-sm sm:text-base">System Administrator N2 - SysOps</h3>
+                                        <p className="text-xs sm:text-sm text-gray-600 mb-2">T-Systems Iberia | 01/2024 - Present | Reus, Spain</p>
+                                        <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                            <li>Managed deployment of applications on Tomcat, WebLogic, Apache, and IIS servers using manual and automated tools like Ansible</li>
+                                            <li>Administered Oracle Database, MySQL, PostgreSQL, MongoDB, and Microsoft SQL - including user management, tables, permissions, backups, and scripting</li>
+                                            <li>Installed and updated software, configurations, and permissions on managed servers</li>
+                                            <li>Created and improved documentation using standardized formats for team efficiency</li>
+                                            <li>Developed internal automation tools in Bash and JavaScript to streamline workflows</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="mb-6">
+                                        <h3 className="font-semibold text-sm sm:text-base">System Administrator</h3>
+                                        <p className="text-xs sm:text-sm text-gray-600 mb-2">Reserva de la Tierra | 06/2021 - 05/2022 | Reus, Spain</p>
+                                        <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                            <li>Worked in IT service management team, ensuring streamlined workflows and user satisfaction</li>
+                                            <li>Provided technical support using ticketing systems, resolving issues promptly with high client satisfaction</li>
+                                            <li>Managed Microsoft 365 suite including Azure, Exchange, SharePoint, OneDrive, and Teams</li>
+                                            <li>Administered Ubiquiti and Fortinet network devices for optimal functionality and security</li>
+                                            <li>Managed Windows Server environments and services (Active Directory, Dynamics NAV)</li>
+                                        </ul>
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Technical Skills</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <h3 className="font-semibold mb-3 text-blue-600 text-sm sm:text-base">System Administration</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>Linux Server (RedHat, Debian, Ubuntu, CentOS, Raspberry Pi OS)</li>
+                                                <li>Windows Server (2008-2022)</li>
+                                                <li>Advanced Bash/Shell, SSH, SFTP</li>
+                                                <li>Docker Compose, Docker Swarm</li>
+                                                <li>BMC ControlM and Server Automation</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-3 text-green-600 text-sm sm:text-base">Databases & Applications</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>Oracle Database, MySQL, PostgreSQL</li>
+                                                <li>MongoDB, Microsoft SQL</li>
+                                                <li>Tomcat, WebLogic, Apache, IIS</li>
+                                                <li>User administration, backups, scripting</li>
+                                                <li>Database permissions and optimization</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-3 text-purple-600 text-sm sm:text-base">Cloud & Automation</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>Azure, Google Cloud, AWS (Basic Knowledge)</li>
+                                                <li>Ansible automation and deployment</li>
+                                                <li>Infrastructure as Code</li>
+                                                <li>Custom Bash and JavaScript scripting</li>
+                                                <li>CI/CD pipeline automation</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold mb-3 text-orange-600 text-sm sm:text-base">IT Service Management</h3>
+                                            <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm">
+                                                <li>ServiceDesk, Remedy ticketing systems</li>
+                                                <li>Confluence, SharePoint documentation</li>
+                                                <li>Ubiquiti, Fortinet network management</li>
+                                                <li>Nagios monitoring, Wireshark analysis</li>
+                                                <li>Acronis Cyber Protect, Clonezilla backups</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Education & Continuous Learning</h2>
+                                    
+                                    <div className="mb-4">
+                                        <h3 className="font-semibold text-sm sm:text-base">HNC Web Development (DAW)</h3>
+                                        <p className="text-xs sm:text-sm text-gray-600 mb-2">Institut Baix Camp | 09/2022 - Present | Reus, Spain</p>
+                                        <p className="text-xs sm:text-sm text-gray-700">Currently pursuing advanced web development certification, expanding skills in modern web technologies and frameworks.</p>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <h3 className="font-semibold text-sm sm:text-base">HNC IT Systems Administration (ASIX)</h3>
+                                        <p className="text-xs sm:text-sm text-gray-600 mb-2">Institut Baix Camp | 09/2020 - 06/2022 | Reus, Spain</p>
+                                        <p className="text-xs sm:text-sm text-gray-700">Comprehensive systems administration program covering Linux/Windows servers, networking, and IT service management.</p>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <h4 className="font-semibold text-sm text-gray-700 mb-2">Languages:</h4>
+                                        <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm text-gray-600">
+                                            <div>• <strong>Spanish:</strong> Native</div>
+                                            <div>• <strong>Catalan:</strong> Native</div>
+                                            <div>• <strong>English:</strong> Professional</div>
+                                            <div>• <strong>Romanian:</strong> Professional</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <h4 className="font-semibold text-sm text-gray-700 mb-2">Professional Skills:</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {['Problem-Solving', 'Flexibility', 'Highly Motivated', 'Communication', 'Attention to Detail'].map((skill, index) => (
+                                                <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Achievements & Projects</h2>
+                                    <div className="space-y-4">
+                                        <div className="border-l-4 border-blue-500 pl-4">
+                                            <h4 className="font-semibold text-sm sm:text-base">Infrastructure Automation Platform</h4>
+                                            <p className="text-xs sm:text-sm text-gray-600">Built comprehensive IONOS VPS automation using Ansible, reducing deployment time by 80%</p>
+                                        </div>
+                                        <div className="border-l-4 border-green-500 pl-4">
+                                            <h4 className="font-semibold text-sm sm:text-base">Multi-Service Monitoring Stack</h4>
+                                            <p className="text-xs sm:text-sm text-gray-600">Implemented Grafana/Prometheus monitoring for 15+ services with custom alerting</p>
+                                        </div>
+                                        <div className="border-l-4 border-purple-500 pl-4">
+                                            <h4 className="font-semibold text-sm sm:text-base">Privacy-First Web Applications</h4>
+                                            <p className="text-xs sm:text-sm text-gray-600">Developed client-side chat converter with 100% privacy-focused architecture</p>
+                                        </div>
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">My Projects & Services</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {[
+                                            { 
+                                                title: "Infrastructure Monitoring", 
+                                                desc: "Real-time monitoring dashboard for all services", 
+                                                link: "https://monitoring.robyrew.com",
+                                                tech: "Grafana, Prometheus, Docker"
+                                            },
+                                            { 
+                                                title: "Proxy Management", 
+                                                desc: "Nginx Proxy Manager for SSL and routing", 
+                                                link: "https://proxy.robyrew.com",
+                                                tech: "Nginx, Let's Encrypt, Docker"
+                                            },
+                                            { 
+                                                title: "Chat Converter Tool", 
+                                                desc: "Privacy-focused WhatsApp/Telegram converter", 
+                                                link: "https://chat-exporter.robyrew.com",
+                                                tech: "JavaScript, Privacy-First"
+                                            },
+                                            { 
+                                                title: "Container Management", 
+                                                desc: "Portainer dashboard for Docker services", 
+                                                link: "https://portainer.robyrew.com",
+                                                tech: "Docker, Portainer"
+                                            }
+                                        ].map((project, index) => (
+                                            <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                                <h3 className="font-semibold mb-2 text-sm sm:text-base">{project.title}</h3>
+                                                <p className="text-gray-600 text-xs sm:text-sm mb-2">{project.desc}</p>
+                                                <p className="text-xs text-gray-500 mb-3">Tech: {project.tech}</p>
+                                                <a 
+                                                    href={project.link} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center text-blue-500 hover:underline text-xs sm:text-sm"
+                                                >
+                                                    <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                                    Visit Live Site
+                                                </a>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Card>
+                            </div>
+                        )}
+
+                        {/* Contact Tab - Social Links, Email, Contact Form */}
+                        {activeTab === 'contact' && (
+                            <div className="animate-fade-in space-y-6">
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Social Media & Platforms</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <SocialLink Icon={Instagram} href="https://instagram.com/cosmingln" label="Instagram" username="@cosmingln" showLabel={true} />
+                                        <SocialLink Icon={Youtube} href="https://youtube.com/@cosmingln" label="YouTube" username="@cosmingln" showLabel={true} />
+                                        <SocialLink Icon={Github} href="https://github.com/cosmincaliin" label="GitHub" username="@cosmincaliin" showLabel={true} />
+                                        <SocialLink Icon={Linkedin} href="https://linkedin.com/in/cosmincaliin" label="LinkedIn" username="cosmincaliin" showLabel={true} />
+                                        <SocialLink Icon={XIcon} href="https://x.com/cosmincaliin" label="X (Twitter)" username="@cosmincaliin" showLabel={true} />
+                                        <SocialLink Icon={Reddit} href="https://reddit.com/u/cosmingln" label="Reddit" username="u/cosmingln" showLabel={true} />
+                                        <SocialLink Icon={VSCO} href="https://vsco.co/cosmingln" label="VSCO" username="cosmingln" showLabel={true} />
+                                        <SocialLink Icon={Tumblr} href="https://cosmingln.tumblr.com" label="Tumblr" username="cosmingln" showLabel={true} />
+                                        <SocialLink Icon={Pinterest} href="https://pinterest.com/cosmingln" label="Pinterest" username="cosmingln" showLabel={true} />
+                                        <SocialLink Icon={Facebook} href="https://facebook.com/cosmingln" label="Facebook" username="cosmingln" showLabel={true} />
+                                    </div>
+                                </Card>
+
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Contact Information</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                        <div>
+                                            <h3 className="font-semibold text-sm sm:text-base mb-2">Primary Email</h3>
+                                            <a href="mailto:cosmin.calin22@gmail.com" className="text-blue-500 hover:underline text-sm sm:text-base">
+                                                cosmin.calin22@gmail.com
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-sm sm:text-base mb-2">Alternative Email</h3>
+                                            <a href="mailto:cosmin.cg22@gmail.com" className="text-blue-500 hover:underline text-sm sm:text-base">
+                                                cosmin.cg22@gmail.com
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-sm sm:text-base mb-2">Location</h3>
+                                            <p className="text-gray-600 text-sm sm:text-base">Tarragona, Spain</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-sm sm:text-base mb-2">Born</h3>
+                                            <p className="text-gray-600 text-sm sm:text-base">06 April, 2001</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-sm sm:text-base mb-2">Availability</h3>
+                                            <p className="text-gray-600 text-sm sm:text-base">Open to opportunities</p>
+                                        </div>
+                                    </div>
+                                </Card>
+
+                                {/* Send Message Form - Temporarily Hidden
+                                <Card className="card-padding">
+                                    <h2 className="text-lg sm:text-xl font-semibold mb-4">Send me a Message</h2>
+                                    <form className="contact-form space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                            <input 
+                                                type="text" 
+                                                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Your name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                            <input 
+                                                type="email" 
+                                                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="your.email@example.com"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                            <input 
+                                                type="text" 
+                                                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="What's this about?"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                            <textarea 
+                                                rows="4"
+                                                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Your message..."
+                                            ></textarea>
+                                        </div>
+                                        <button 
+                                            type="submit" 
+                                            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200 font-medium"
+                                        >
+                                            Send Message
+                                        </button>
+                                        <p className="text-xs text-gray-500 text-center">
+                                            Note: This form is for demo purposes. Configure it with your preferred email service.
+                                        </p>
+                                    </form>
+                                </Card>
+                                */}
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer Section */}
+                    <footer className="bg-gray-100 mt-6">
+                        <div className="container mx-auto px-4 sm:px-6 py-6">
+                            <Card className="card-padding">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                    {/* About Column */}
+                                    <div>
+                                        <h3 className="text-sm font-semibold mb-2 text-gray-800">Cosmin Calin</h3>
+                                        <p className="text-gray-600 text-xs mb-2 leading-relaxed">
+                                            System Administrator in Tarragona, Spain
+                                        </p>
+                                        <p className="text-gray-500 text-xs">
+                                            📧 cosmin.calin22@gmail.com<br/>
+                                        </p>
+                                    </div>
+
+                                    {/* Quick Links Column */}
+                                    <div>
+                                        <h3 className="text-sm font-semibold mb-2 text-gray-800">Quick Links</h3>
+                                        <ul className="space-y-1 text-xs">
+                                            <li>
+                                                <button 
+                                                    onClick={() => setActiveTab('about')} 
+                                                    className="text-gray-600 hover:text-blue-500 transition-colors"
+                                                >
+                                                    About & Projects
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button 
+                                                    onClick={() => setActiveTab('experience')} 
+                                                    className="text-gray-600 hover:text-blue-500 transition-colors"
+                                                >
+                                                    Experience & Skills
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button 
+                                                    onClick={() => setActiveTab('contact')} 
+                                                    className="text-gray-600 hover:text-blue-500 transition-colors"
+                                                >
+                                                    Contact & Social
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    {/* Social & Tech Column */}
+                                    <div>
+                                        <h3 className="text-sm font-semibold mb-2 text-gray-800">Connect & Services</h3>
+                                        <div className="flex flex-wrap gap-2 mb-2">
+                                            <a href="https://github.com/cosmincaliin" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500">
+                                                <Github className="w-4 h-4" />
+                                            </a>
+                                            <a href="https://linkedin.com/in/cosmincaliin" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500">
+                                                <Linkedin className="w-4 h-4" />
+                                            </a>
+                                            <a href="https://instagram.com/cosmingln" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-500">
+                                                <Instagram className="w-4 h-4" />
+                                            </a>
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            <a href="https://monitoring.robyrew.com" target="_blank" className="hover:text-blue-500 block">Monitoring</a>
+                                            <a href="https://chat-exporter.robyrew.com" target="_blank" className="hover:text-blue-500 block">Chat Converter</a>
+                                            <a href="https://portainer.robyrew.com" target="_blank" className="hover:text-blue-500 block">Containers</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer Bottom */}
+                                <div className="border-t border-gray-200 mt-4 pt-3 text-center">
+                                    <p className="text-gray-500 text-xs">
+                                        © {new Date().getFullYear()} Cosmin Calin | Built with React, Tailwind CSS, Ansible & Docker
+                                    </p>
+                                </div>
+                            </Card>
+                        </div>
+                    </footer>
+
+                    {modalImage && (
+                        <ImageModal src={modalImage.src} alt={modalImage.alt} onClose={closeModal} />
+                    )}
+                </div>
+            );
+        };
+
+        // Use React 18 createRoot API
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ProfilePage />);
+    </script>
+</body>
+</html>
