@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, entriesForLocale } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import JobCard from '@components/JobCard.astro';
+import EducationCard from '@components/EducationCard.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+const allJobs = await getCollection('jobs');
+const allEdu = await getCollection('education');
+
+const jobs = entriesForLocale(allJobs, lang)
+  .sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
+const edu = entriesForLocale(allEdu, lang)
+  .sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
+---
+
+<BaseLayout locale={lang} title={t(lang, 'sections.experience')}>
+  <SectionHeading
+    eyebrow="00"
+    title={t(lang, 'sections.experience')}
+    as="h1"
+  />
+
+  <section class="mb-12 space-y-4">
+    {jobs.map((j) => <JobCard entry={j} locale={lang} />)}
+  </section>
+
+  <h2 class="mb-4 text-2xl font-bold tracking-tight">{t(lang, 'sections.education')}</h2>
+  <section class="space-y-4">
+    {edu.map((e) => <EducationCard entry={e} locale={lang} />)}
+  </section>
+</BaseLayout>

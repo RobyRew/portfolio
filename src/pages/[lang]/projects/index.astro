@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, path, entriesForLocale, stripLocaleFromId } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import ProjectFilter from '@islands/ProjectFilter';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+const all = await getCollection('projects');
+const projects = entriesForLocale(all, lang).sort((a, b) => a.data.order - b.data.order);
+const allTechs = [...new Set(projects.flatMap((p) => p.data.tech))];
+---
+
+<BaseLayout locale={lang} title={t(lang, 'nav.projects')}>
+  <SectionHeading
+    eyebrow="00"
+    title={t(lang, 'nav.projects')}
+    description={t(lang, 'site.tagline')}
+    as="h1"
+  />
+
+  <ProjectFilter
+    client:idle
+    techs={allTechs}
+    showAllLabel={t(lang, 'actions.showAll')}
+    filterLabel={t(lang, 'actions.filterByTech')}
+  />
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    {projects.map((p) => {
+      const slug = stripLocaleFromId(p.id);
+      const techAttr = p.data.tech.join('|');
+      return (
+        <a
+          href={path(lang, 'projects', slug)}
+          data-cmd data-cmd-label={p.data.title} data-cmd-group="project"
+          data-tech={techAttr}
+          class="contents"
+        >
+          <ProjectCard entry={p} locale={lang} />
+        </a>
+      );
+    })}
+  </div>
+</BaseLayout>

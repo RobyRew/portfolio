@@ -1,0 +1,113 @@
+---
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, tList } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import { Icon } from 'astro-icon/components';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const philosophy = tList(lang, 'about.philosophyItems');
+
+const langs: Array<{ code: Locale | 'cat'; name: string; level: string }> = [
+  { code: 'en', name: t(lang, 'languages.en'), level: t(lang, 'languageLevels.full') },
+  { code: 'es', name: t(lang, 'languages.es'), level: t(lang, 'languageLevels.native') },
+  { code: 'cat', name: t(lang, 'languages.ca'), level: t(lang, 'languageLevels.native') },
+  { code: 'ro', name: t(lang, 'languages.ro'), level: t(lang, 'languageLevels.full') },
+];
+
+const skills: Array<{ category: string; items: string[] }> = [
+  {
+    category: 'System Administration',
+    items: ['Linux Server (Debian, Ubuntu, RHEL, CentOS, Raspberry Pi OS)', 'Windows Server (2008–2022)', 'Active Directory', 'Bash / Shell scripting', 'SSH, SFTP', 'BMC Control-M / Server Automation'],
+  },
+  {
+    category: 'Application Servers',
+    items: ['Apache Tomcat', 'Oracle WebLogic', 'Apache HTTPD', 'IIS', 'Nginx', 'Traefik'],
+  },
+  {
+    category: 'Databases',
+    items: ['Oracle', 'MySQL / MariaDB', 'PostgreSQL', 'Microsoft SQL Server', 'MongoDB'],
+  },
+  {
+    category: 'Automation & DevOps',
+    items: ['Ansible', 'Docker / Docker Compose', 'Docker Swarm', 'GitHub Actions', 'Renovate'],
+  },
+  {
+    category: 'Cloud (basic)',
+    items: ['Azure', 'Google Cloud', 'AWS'],
+  },
+  {
+    category: 'IT Service Management',
+    items: ['ServiceDesk', 'BMC Remedy', 'Confluence', 'SharePoint', 'Microsoft 365 / Azure AD'],
+  },
+  {
+    category: 'Networking & Security',
+    items: ['Ubiquiti UniFi', 'Fortinet FortiGate', 'WireGuard / Tailscale', 'UFW / nftables', 'CrowdSec', 'auditd', 'Lynis', 'AppArmor'],
+  },
+  {
+    category: 'Monitoring & Backup',
+    items: ['Nagios', 'Beszel', 'Restic', 'Acronis Cyber Protect', 'Clonezilla'],
+  },
+  {
+    category: 'Web / App Development',
+    items: ['TypeScript', 'React 19', 'Astro 5', 'Next.js 16', 'Tailwind CSS 4', 'Swift / SwiftUI', 'Node.js', 'Vite'],
+  },
+];
+---
+
+<BaseLayout locale={lang} title={t(lang, 'about.title')}>
+  <SectionHeading eyebrow="00" title={t(lang, 'about.title')} description={t(lang, 'about.intro')} as="h1" />
+
+  <section class="mb-12">
+    <h2 class="mb-3 text-xl font-bold">{t(lang, 'about.philosophyTitle')}</h2>
+    <ul class="space-y-3 text-base text-[var(--fg-2)]">
+      {philosophy.map((p) => (
+        <li class="flex gap-3">
+          <Icon name="lucide:check" class="mt-1 h-4 w-4 shrink-0 text-[var(--color-accent-500)]" />
+          <span>{p}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-3 text-xl font-bold">{t(lang, 'about.outsideWorkTitle')}</h2>
+    <p class="text-base text-[var(--fg-2)]">{t(lang, 'about.outsideWork')}</p>
+  </section>
+
+  <!-- ── Languages ──────────────────────────────────────────────── -->
+  <section class="mb-12">
+    <h2 class="mb-4 text-xl font-bold">{t(lang, 'sections.languages')}</h2>
+    <div class="grid gap-2 sm:grid-cols-2">
+      {langs.map((l) => (
+        <div class="card flex items-center justify-between p-3">
+          <span class="font-semibold">{l.name}</span>
+          <span class="font-mono text-xs text-[var(--fg-2)]">{l.level}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Skills ─────────────────────────────────────────────────── -->
+  <section>
+    <h2 class="mb-4 text-xl font-bold">{t(lang, 'sections.skills')}</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {skills.map((s) => (
+        <div class="card p-4">
+          <h3 class="mb-2 font-semibold text-[var(--fg)]">{s.category}</h3>
+          <div class="flex flex-wrap gap-1.5">
+            {s.items.map((item) => (
+              <span class="inline-flex items-center rounded-md border border-[var(--line)] bg-[var(--bg-2)] px-2 py-0.5 font-mono text-xs text-[var(--fg-2)]">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, entriesForLocale, formatDate } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+const jobs = entriesForLocale(await getCollection('jobs'), lang)
+  .sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
+const edu = entriesForLocale(await getCollection('education'), lang)
+  .sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));
+---
+
+<BaseLayout locale={lang} title={t(lang, 'nav.cv')} noindex>
+  <article class="mx-auto max-w-3xl space-y-6">
+    <header class="mb-4 border-b border-[var(--line)] pb-4">
+      <h1 class="text-3xl font-bold">Gheorghe Cosmin Calin</h1>
+      <p class="mt-1 text-[var(--fg-2)]">System Administrator · SysOps · T-Systems Iberia (Deutsche Telekom Technik)</p>
+      <div class="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-[var(--fg-2)]">
+        <span>cosmin.cg22@gmail.com</span>
+        <span>+34 640 851 840</span>
+        <span>Tarragona, Spain</span>
+        <span>github.com/robyrew</span>
+        <span>linkedin.com/in/cosmincaliin</span>
+      </div>
+    </header>
+
+    <section>
+      <h2 class="mb-3 text-lg font-bold uppercase tracking-wider">{t(lang, 'sections.experience')}</h2>
+      <div class="space-y-5">
+        {jobs.map((j) => (
+          <div>
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-base font-semibold">{j.data.role}</h3>
+              <span class="font-mono text-xs text-[var(--fg-2)]">
+                {formatDate(lang, j.data.startDate)} — {j.data.current ? t(lang, 'labels.present') : formatDate(lang, j.data.endDate ?? null)}
+              </span>
+            </div>
+            <p class="text-sm text-[var(--fg-2)]">
+              <strong>{j.data.company}</strong> · {j.data.location}
+              {j.data.teamScope && <> · <em>{j.data.teamScope}</em></>}
+            </p>
+            <ul class="ml-5 mt-2 list-disc space-y-1 text-sm marker:text-[var(--color-accent-500)]">
+              {j.data.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-3 text-lg font-bold uppercase tracking-wider">{t(lang, 'sections.education')}</h2>
+      <div class="space-y-3">
+        {edu.map((e) => (
+          <div>
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-base font-semibold">{e.data.qualification}</h3>
+              <span class="font-mono text-xs text-[var(--fg-2)]">
+                {formatDate(lang, e.data.startDate)} — {e.data.current ? t(lang, 'labels.present') : formatDate(lang, e.data.endDate ?? null)}
+              </span>
+            </div>
+            <p class="text-sm text-[var(--fg-2)]">{e.data.institution} · {e.data.location}</p>
+            <p class="mt-1 text-sm">{e.data.summary}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-3 text-lg font-bold uppercase tracking-wider">{t(lang, 'sections.languages')}</h2>
+      <ul class="grid grid-cols-2 gap-2 text-sm">
+        <li><strong>{t(lang, 'languages.en')}</strong> · {t(lang, 'languageLevels.full')}</li>
+        <li><strong>{t(lang, 'languages.es')}</strong> · {t(lang, 'languageLevels.native')}</li>
+        <li><strong>{t(lang, 'languages.ca')}</strong> · {t(lang, 'languageLevels.native')}</li>
+        <li><strong>{t(lang, 'languages.ro')}</strong> · {t(lang, 'languageLevels.full')}</li>
+      </ul>
+    </section>
+
+    <div class="no-print pt-4">
+      <button
+        type="button"
+        onclick="window.print()"
+        class="rounded-md border border-[var(--line)] px-4 py-2 text-sm hover:border-[var(--color-accent-500)]"
+      >
+        🖨️ Print / Save as PDF
+      </button>
+    </div>
+  </article>
+</BaseLayout>

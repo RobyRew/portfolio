@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { t, formatDate } from '@i18n/utils';
+import { Icon } from 'astro-icon/components';
+import TechBadge from './TechBadge.astro';
+
+export interface Props {
+  entry: CollectionEntry<'jobs'>;
+  locale: Locale;
+}
+const { entry, locale } = Astro.props;
+const data = entry.data;
+const dateRange = `${formatDate(locale, data.startDate)} — ${data.current ? t(locale, 'labels.present') : formatDate(locale, data.endDate ?? null)}`;
+---
+
+<article class="card flex flex-col gap-4 p-5 sm:p-6">
+  <header>
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h3 class="text-lg font-semibold text-[var(--fg)]">{data.role}</h3>
+      <span class="font-mono text-xs text-[var(--fg-2)]">{dateRange}</span>
+    </div>
+    <p class="mt-1 flex items-center gap-2 text-base text-[var(--fg-2)]">
+      <Icon name="lucide:building" class="h-4 w-4" />
+      <strong class="text-[var(--fg)]">{data.company}</strong>
+      <span>·</span>
+      <span>{data.location}</span>
+    </p>
+    {data.teamScope && (
+      <p class="mt-1 text-sm italic text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">
+        {data.teamScope}
+      </p>
+    )}
+  </header>
+
+  <ul class="ml-4 list-disc space-y-1.5 text-sm leading-relaxed text-[var(--fg-2)] marker:text-[var(--color-accent-500)]">
+    {data.highlights.map((h) => <li>{h}</li>)}
+  </ul>
+
+  {data.tech.length > 0 && (
+    <div class="flex flex-wrap gap-1.5">
+      {data.tech.map((t) => <TechBadge tech={t} />)}
+    </div>
+  )}
+</article>

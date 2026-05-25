@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /*/cv
+
+Sitemap: https://cosmincalin.es/sitemap-index.xml

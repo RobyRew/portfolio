@@ -1,0 +1,35 @@
+---
+import type { Locale } from '@i18n/utils';
+import { t, path } from '@i18n/utils';
+import { Icon } from 'astro-icon/components';
+
+export interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--line)] no-print">
+  <div class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+    <p class="text-sm text-[var(--fg-2)]">
+      {t(locale, 'footer.themeBy', { year })}
+    </p>
+
+    <div class="flex flex-wrap items-center gap-4 text-sm">
+      <a href={path(locale, 'cv')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        {t(locale, 'nav.cv')}
+      </a>
+      <a href="https://github.com/robyrew" rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        <Icon name="simple-icons:github" class="h-4 w-4" /> GitHub
+      </a>
+      <a href="https://linkedin.com/in/cosmincaliin" rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        <Icon name="simple-icons:linkedin" class="h-4 w-4" /> LinkedIn
+      </a>
+      <a href="https://github.com/cosmincalin/portfolio" rel="noopener" class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        {t(locale, 'footer.source')}
+      </a>
+    </div>
+  </div>
+  <p class="px-4 pb-6 text-center text-xs text-[var(--fg-2)] sm:px-6 lg:px-8">
+    {t(locale, 'footer.builtWith')}
+  </p>
+</footer>

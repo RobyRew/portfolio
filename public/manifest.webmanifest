@@ -1,0 +1,13 @@
+{
+  "name": "Cosmin Calin",
+  "short_name": "cosmincalin",
+  "description": "Personal portfolio — Cosmin Calin",
+  "start_url": "/en/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#13aa6a",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

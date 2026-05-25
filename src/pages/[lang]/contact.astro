@@ -1,0 +1,56 @@
+---
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import { Icon } from 'astro-icon/components';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+const channels = [
+  { icon: 'lucide:mail',         label: t(lang, 'contact.email'),    value: 'cosmin.cg22@gmail.com', href: 'mailto:cosmin.cg22@gmail.com', dataCmdGroup: 'contact' },
+  { icon: 'simple-icons:github', label: t(lang, 'contact.github'),   value: 'github.com/robyrew',     href: 'https://github.com/robyrew', dataCmdGroup: 'contact' },
+  { icon: 'simple-icons:linkedin', label: t(lang, 'contact.linkedin'), value: 'linkedin.com/in/cosmincaliin', href: 'https://linkedin.com/in/cosmincaliin', dataCmdGroup: 'contact' },
+];
+---
+
+<BaseLayout locale={lang} title={t(lang, 'contact.title')}>
+  <SectionHeading
+    eyebrow="00"
+    title={t(lang, 'contact.title')}
+    description={t(lang, 'contact.intro')}
+    as="h1"
+  />
+
+  <ul class="space-y-3">
+    {channels.map((c) => (
+      <li>
+        <a
+          href={c.href}
+          rel="noopener"
+          data-cmd data-cmd-label={c.label} data-cmd-group={c.dataCmdGroup}
+          class="card flex items-center gap-4 p-4 transition-colors"
+        >
+          <Icon name={c.icon} class="h-6 w-6 text-[var(--fg-2)]" />
+          <div class="flex-1">
+            <p class="font-semibold text-[var(--fg)]">{c.label}</p>
+            <p class="font-mono text-sm text-[var(--fg-2)]">{c.value}</p>
+          </div>
+          <Icon name="lucide:arrow-up-right" class="h-5 w-5 text-[var(--fg-2)]" />
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <aside class="mt-10 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] p-5 text-sm">
+    <h2 class="mb-2 flex items-center gap-2 font-semibold text-[var(--fg)]">
+      <Icon name="lucide:lock" class="h-4 w-4" />
+      {t(lang, 'contact.pgpTitle')}
+    </h2>
+    <p class="text-[var(--fg-2)]">{t(lang, 'contact.pgpHint')}</p>
+  </aside>
+</BaseLayout>

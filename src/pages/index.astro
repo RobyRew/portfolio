@@ -1,0 +1,32 @@
+---
+// Root → negotiate locale → redirect. Pure HTML fallback, no JS required.
+// In production, nginx also does `return 302 /en/`, this exists for the dev server.
+import { LOCALES, DEFAULT_LOCALE } from '@i18n/utils';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cosmin Calin</title>
+    <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LOCALE}/`} />
+    <link rel="canonical" href={`/${DEFAULT_LOCALE}/`} />
+  </head>
+  <body>
+    <script is:inline>
+      (function () {
+        try {
+          const supported = ['en', 'es', 'ca', 'ro'];
+          const fallback = 'en';
+          const userLangs = (navigator.languages || [navigator.language]).map((l) => l.toLowerCase().split('-')[0]);
+          const match = userLangs.find((l) => supported.includes(l)) || fallback;
+          window.location.replace('/' + match + '/');
+        } catch (_) {
+          window.location.replace('/' + 'en' + '/');
+        }
+      })();
+    </script>
+    <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>/{DEFAULT_LOCALE}/</a>…</p>
+  </body>
+</html>
+{Astro.props && LOCALES /* keep types happy */}

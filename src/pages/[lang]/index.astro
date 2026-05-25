@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, path, entriesForLocale, stripLocaleFromId } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import JobCard from '@components/JobCard.astro';
+import { Icon } from 'astro-icon/components';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+const allProjects = await getCollection('projects');
+const allJobs = await getCollection('jobs');
+
+const projects = entriesForLocale(allProjects, lang)
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const currentJob = entriesForLocale(allJobs, lang)
+  .find((j) => j.data.current);
+---
+
+<BaseLayout locale={lang}>
+  <!-- ── Hero ─────────────────────────────────────────────────────── -->
+  <section class="mb-16 sm:mb-24">
+    <p class="font-mono text-sm text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">
+      {t(lang, 'hero.intro')}
+    </p>
+    <h1 class="mt-2 text-4xl font-bold tracking-tight sm:text-6xl">
+      Cosmin Calin
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-2)] sm:text-xl">
+      {t(lang, 'hero.role')}
+    </p>
+    <p class="mt-3 max-w-2xl text-base text-[var(--fg-2)]">
+      {t(lang, 'hero.summary')}
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        href={path(lang, 'projects')}
+        data-cmd data-cmd-label={t(lang, 'nav.projects')} data-cmd-group="navigate"
+        class="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-500)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-600)]"
+      >
+        {t(lang, 'hero.ctaPrimary')}
+        <Icon name="lucide:arrow-right" class="h-4 w-4" />
+      </a>
+      <a
+        href={path(lang, 'about')}
+        data-cmd data-cmd-label={t(lang, 'nav.about')} data-cmd-group="navigate"
+        class="inline-flex items-center gap-2 rounded-md border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--fg)] transition-colors hover:border-[var(--color-accent-500)]"
+      >
+        {t(lang, 'hero.ctaSecondary')}
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Current role ─────────────────────────────────────────────── -->
+  {currentJob && (
+    <section class="mb-16 sm:mb-24">
+      <SectionHeading eyebrow="01" title={t(lang, 'sections.currentRole')} />
+      <JobCard entry={currentJob} locale={lang} />
+    </section>
+  )}
+
+  <!-- ── Featured projects ────────────────────────────────────────── -->
+  <section class="mb-16 sm:mb-24">
+    <SectionHeading eyebrow="02" title={t(lang, 'sections.featuredProjects')} />
+    <div class="grid gap-4 sm:grid-cols-2">
+      {projects.map((p) => (
+        <a
+          href={path(lang, 'projects', stripLocaleFromId(p.id))}
+          data-cmd data-cmd-label={p.data.title} data-cmd-group="project"
+          class="contents"
+        >
+          <ProjectCard entry={p} locale={lang} />
+        </a>
+      ))}
+    </div>
+    <p class="mt-6">
+      <a
+        href={path(lang, 'projects')}
+        class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--link)] hover:underline"
+      >
+        {t(lang, 'sections.otherProjects')}
+        <Icon name="lucide:arrow-right" class="h-4 w-4" />
+      </a>
+    </p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,118 @@
+---
+import type { Locale } from '@i18n/utils';
+import { t, path, alternateLinks } from '@i18n/utils';
+import { Icon } from 'astro-icon/components';
+import ThemeToggle from '@islands/ThemeToggle';
+import LocaleSwitcher from '@islands/LocaleSwitcher';
+import CommandPalette from '@islands/CommandPalette';
+
+export interface Props {
+  locale: Locale;
+  currentPath: string;
+}
+const { locale, currentPath } = Astro.props;
+
+const nav = [
+  { href: path(locale),               key: 'nav.home' },
+  { href: path(locale, 'about'),      key: 'nav.about' },
+  { href: path(locale, 'experience'), key: 'nav.experience' },
+  { href: path(locale, 'projects'),   key: 'nav.projects' },
+  { href: path(locale, 'contact'),    key: 'nav.contact' },
+] as const;
+
+const isActive = (href: string) => {
+  if (href === path(locale) && currentPath === path(locale)) return true;
+  if (href === path(locale)) return false;
+  return currentPath.startsWith(href);
+};
+
+const localeAlternates = alternateLinks(locale, currentPath);
+const dict = {
+  home: t(locale, 'nav.home'),
+  about: t(locale, 'nav.about'),
+  experience: t(locale, 'nav.experience'),
+  projects: t(locale, 'nav.projects'),
+  contact: t(locale, 'nav.contact'),
+  switchTheme: t(locale, 'actions.switchTheme'),
+  themeLight: t(locale, 'actions.themeLight'),
+  themeDark: t(locale, 'actions.themeDark'),
+  themeSystem: t(locale, 'actions.themeSystem'),
+  switchLanguage: t(locale, 'actions.switchLanguage'),
+  openMenu: t(locale, 'actions.openMenu'),
+  closeMenu: t(locale, 'actions.closeMenu'),
+  commandPalette: t(locale, 'actions.commandPalette'),
+};
+---
+
+<header class="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--bg)]/85 backdrop-blur-md no-print">
+  <div class="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:px-6 lg:px-8">
+    <a href={path(locale)} class="group flex items-center gap-2 font-bold tracking-tight">
+      <span class="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-accent-500)] text-white">cc</span>
+      <span class="hidden text-base text-[var(--fg)] sm:inline">Cosmin Calin</span>
+    </a>
+
+    <nav class="ml-2 hidden flex-1 items-center gap-1 sm:flex">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'rounded-md px-3 py-1.5 text-sm transition-colors',
+            isActive(item.href)
+              ? 'bg-[var(--bg-2)] text-[var(--fg)]'
+              : 'text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)]',
+          ]}
+        >
+          {t(locale, item.key)}
+        </a>
+      ))}
+    </nav>
+
+    <div class="ml-auto flex items-center gap-1">
+      <CommandPalette
+        client:idle
+        locale={locale}
+        triggerLabel={dict.commandPalette}
+      />
+      <LocaleSwitcher
+        client:idle
+        locale={locale}
+        alternates={localeAlternates}
+        label={dict.switchLanguage}
+      />
+      <ThemeToggle
+        client:idle
+        labels={{
+          toggle: dict.switchTheme,
+          light: dict.themeLight,
+          dark: dict.themeDark,
+          system: dict.themeSystem,
+        }}
+      />
+
+      <!-- Mobile menu — uses a <details> for zero-JS fallback -->
+      <details class="relative sm:hidden">
+        <summary
+          aria-label={dict.openMenu}
+          class="grid h-9 w-9 cursor-pointer place-items-center rounded-md text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)] [&::-webkit-details-marker]:hidden"
+        >
+          <Icon name="lucide:menu" class="h-5 w-5" />
+        </summary>
+        <div class="absolute right-0 top-[calc(100%+0.5rem)] w-48 origin-top-right rounded-lg border border-[var(--line)] bg-[var(--bg)] p-1 shadow-lg">
+          {nav.map((item) => (
+            <a
+              href={item.href}
+              class:list={[
+                'block rounded-md px-3 py-2 text-sm transition-colors',
+                isActive(item.href)
+                  ? 'bg-[var(--bg-2)] text-[var(--fg)]'
+                  : 'text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)]',
+              ]}
+            >
+              {t(locale, item.key)}
+            </a>
+          ))}
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

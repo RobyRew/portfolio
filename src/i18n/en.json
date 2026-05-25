@@ -1,0 +1,116 @@
+{
+  "site": {
+    "title": "Cosmin Calin",
+    "tagline": "System Administrator · SysOps · Builder",
+    "description": "Personal portfolio of Cosmin Calin — System Administrator at T-Systems Iberia (Deutsche Telekom Technik international team), independent developer of native macOS apps, web tools and Ansible-managed infrastructure."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "contact": "Contact",
+    "cv": "CV"
+  },
+  "actions": {
+    "viewProject": "View project",
+    "viewCode": "Source code",
+    "viewLive": "Open live site",
+    "viewDemo": "Open demo",
+    "downloadCV": "Download CV",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to content",
+    "switchTheme": "Switch theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "switchLanguage": "Switch language",
+    "commandPalette": "Search & navigate",
+    "filterByTech": "Filter by technology",
+    "clearFilter": "Clear filter",
+    "showAll": "Show all"
+  },
+  "hero": {
+    "intro": "Hi, I'm",
+    "role": "System Administrator (N2 — SysOps) at T-Systems Iberia, currently on the international team for Deutsche Telekom Technik.",
+    "summary": "On evenings and weekends I build small things that try to be useful: a Bible presenter for macOS, an ICS calendar editor that actually understands recurrence rules, a hardened Ansible setup for my own VPS.",
+    "ctaPrimary": "See projects",
+    "ctaSecondary": "Read about me"
+  },
+  "sections": {
+    "featuredProjects": "Featured projects",
+    "experience": "Experience",
+    "education": "Education",
+    "languages": "Languages",
+    "skills": "Skills",
+    "currentRole": "Current role",
+    "otherProjects": "Other projects",
+    "contactWays": "Ways to reach me"
+  },
+  "labels": {
+    "present": "Present",
+    "current": "current",
+    "year": "Year",
+    "tech": "Tech",
+    "category": "Category",
+    "status": "Status",
+    "role": "Role",
+    "company": "Company",
+    "school": "School",
+    "location": "Location"
+  },
+  "statuses": {
+    "active": "Active",
+    "maintained": "Maintained",
+    "archived": "Archived",
+    "experimental": "Experimental"
+  },
+  "categories": {
+    "web-app": "Web app",
+    "native-app": "Native app",
+    "library": "Library",
+    "infrastructure": "Infrastructure",
+    "tool": "Tool"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Spanish",
+    "ca": "Catalan",
+    "ro": "Romanian"
+  },
+  "languageLevels": {
+    "native": "Native",
+    "full": "Full professional"
+  },
+  "about": {
+    "title": "About",
+    "intro": "Born in 2001 in Romania, raised in Tarragona, working in Reus. Bilingual at home (Catalan and Spanish), Romanian with family, English at work.",
+    "philosophyTitle": "What I care about",
+    "philosophyItems": [
+      "Boring infrastructure: predictable, automated, documented. Excitement belongs in features, not in operations.",
+      "Code that reads like you meant it. Naming, structure and tests before clever tricks.",
+      "Tools for the people I know — churches, kids, small teams — first; for everyone else, second."
+    ],
+    "outsideWorkTitle": "Outside work",
+    "outsideWork": "Local church involvement, family, reading, the occasional hike around Tarragona. Slow runner."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "The fastest way to reach me is email. I read everything, reply to most of it within a few days.",
+    "email": "Email",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "pgpTitle": "Encrypted",
+    "pgpHint": "Want to send something sensitive? Email me first and ask for my PGP key."
+  },
+  "footer": {
+    "builtWith": "Built with Astro, React and Tailwind",
+    "source": "Source",
+    "lastBuild": "Last built",
+    "themeBy": "Cosmin Calin · {{year}}"
+  },
+  "fallback": {
+    "translationPending": "This page hasn't been translated to this language yet. Showing the English version below."
+  }
+}

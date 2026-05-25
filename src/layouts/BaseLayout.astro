@@ -1,0 +1,106 @@
+---
+import type { Locale } from '@i18n/utils';
+import { t, alternateLinks, LOCALES, localeIntl } from '@i18n/utils';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import '@/styles/global.css';
+
+export interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  /** Optional hero image absolute URL for OpenGraph. */
+  ogImage?: string;
+  /** Restrict crawling (e.g. for /cv print page). */
+  noindex?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description = t(locale, 'site.description'),
+  ogImage,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${t(locale, 'site.title')}` : t(locale, 'site.title');
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const alternates = alternateLinks(locale, Astro.url.pathname);
+
+// Build-time-injected Umami site id (set via PUBLIC_UMAMI_* env vars).
+const umamiSrc = import.meta.env['PUBLIC_UMAMI_SCRIPT_URL'];
+const umamiId  = import.meta.env['PUBLIC_UMAMI_WEBSITE_ID'];
+---
+
+<!doctype html>
+<html lang={localeIntl(locale)} data-theme="light" class="theme-loading">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0a0a0a" />
+
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    {alternates.map(({ locale: loc, href }) => (
+      <link rel="alternate" hreflang={loc} href={new URL(href, Astro.site).toString()} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL('/en/', Astro.site).toString()} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- OpenGraph / Twitter -->
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={localeIntl(locale).replace('-', '_')} />
+    {LOCALES.filter((l) => l !== locale).map((l) => (
+      <meta property="og:locale:alternate" content={localeIntl(l).replace('-', '_')} />
+    ))}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- No-flash theme: apply stored / system theme BEFORE paint -->
+    <script is:inline>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {
+          // localStorage may be blocked — fall through to default light.
+        } finally {
+          document.documentElement.classList.remove('theme-loading');
+        }
+      })();
+    </script>
+
+    <!-- Umami analytics: cookie-less, GDPR-friendly, self-hosted. -->
+    {umamiSrc && umamiId && (
+      <script defer src={umamiSrc} data-website-id={umamiId} data-do-not-track="true"></script>
+    )}
+  </head>
+
+  <body class="flex min-h-dvh flex-col bg-[var(--bg)] text-[var(--fg)]">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-[var(--bg-2)] focus:px-3 focus:py-2 focus:text-sm">
+      {t(locale, 'actions.skipToContent')}
+    </a>
+
+    <Header locale={locale} currentPath={Astro.url.pathname} />
+
+    <main id="main" class="flex-1 safe-area-x mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <slot />
+    </main>
+
+    <Footer locale={locale} />
+  </body>
+</html>

@@ -1,0 +1,116 @@
+{
+  "site": {
+    "title": "Cosmin Calin",
+    "tagline": "Administrador de sistemas · SysOps · Constructor",
+    "description": "Portfolio personal de Cosmin Calin — Administrador de sistemas en T-Systems Iberia (equipo internacional de Deutsche Telekom Technik), desarrollador independiente de apps nativas para macOS, herramientas web e infraestructura gestionada con Ansible."
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "contact": "Contacto",
+    "cv": "CV"
+  },
+  "actions": {
+    "viewProject": "Ver proyecto",
+    "viewCode": "Código fuente",
+    "viewLive": "Abrir sitio en vivo",
+    "viewDemo": "Abrir demo",
+    "downloadCV": "Descargar CV",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "skipToContent": "Saltar al contenido",
+    "switchTheme": "Cambiar tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "switchLanguage": "Cambiar idioma",
+    "commandPalette": "Buscar y navegar",
+    "filterByTech": "Filtrar por tecnología",
+    "clearFilter": "Quitar filtro",
+    "showAll": "Mostrar todo"
+  },
+  "hero": {
+    "intro": "Hola, soy",
+    "role": "Administrador de sistemas (N2 — SysOps) en T-Systems Iberia, actualmente en el equipo internacional para Deutsche Telekom Technik.",
+    "summary": "Por las tardes y fines de semana construyo pequeñas herramientas que intentan ser útiles: un presentador bíblico para macOS, un editor de calendarios ICS que entiende las reglas de recurrencia, una infraestructura Ansible reforzada para mi propio VPS.",
+    "ctaPrimary": "Ver proyectos",
+    "ctaSecondary": "Sobre mí"
+  },
+  "sections": {
+    "featuredProjects": "Proyectos destacados",
+    "experience": "Experiencia",
+    "education": "Educación",
+    "languages": "Idiomas",
+    "skills": "Habilidades",
+    "currentRole": "Puesto actual",
+    "otherProjects": "Otros proyectos",
+    "contactWays": "Cómo contactarme"
+  },
+  "labels": {
+    "present": "Actualidad",
+    "current": "actual",
+    "year": "Año",
+    "tech": "Tecnología",
+    "category": "Categoría",
+    "status": "Estado",
+    "role": "Puesto",
+    "company": "Empresa",
+    "school": "Centro",
+    "location": "Ubicación"
+  },
+  "statuses": {
+    "active": "Activo",
+    "maintained": "Mantenido",
+    "archived": "Archivado",
+    "experimental": "Experimental"
+  },
+  "categories": {
+    "web-app": "App web",
+    "native-app": "App nativa",
+    "library": "Librería",
+    "infrastructure": "Infraestructura",
+    "tool": "Herramienta"
+  },
+  "languages": {
+    "en": "Inglés",
+    "es": "Español",
+    "ca": "Catalán",
+    "ro": "Rumano"
+  },
+  "languageLevels": {
+    "native": "Nativo",
+    "full": "Profesional completo"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "intro": "Nacido en 2001 en Rumanía, criado en Tarragona, trabajando en Reus. Bilingüe en casa (catalán y español), rumano con la familia, inglés en el trabajo.",
+    "philosophyTitle": "Lo que me importa",
+    "philosophyItems": [
+      "Infraestructura aburrida: predecible, automatizada, documentada. La emoción pertenece a las funciones, no a las operaciones.",
+      "Código que se lee como pretendías. Nombres, estructura y tests antes que trucos ingeniosos.",
+      "Herramientas para la gente que conozco — iglesias, niños, equipos pequeños — primero; para los demás, después."
+    ],
+    "outsideWorkTitle": "Fuera del trabajo",
+    "outsideWork": "Participación en mi iglesia local, familia, lectura, alguna ruta por Tarragona. Corredor lento."
+  },
+  "contact": {
+    "title": "Contacto",
+    "intro": "La forma más rápida de contactarme es por correo. Leo todo y respondo a la mayoría en pocos días.",
+    "email": "Correo",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "pgpTitle": "Cifrado",
+    "pgpHint": "¿Necesitas enviarme algo sensible? Escríbeme primero y te paso mi clave PGP."
+  },
+  "footer": {
+    "builtWith": "Hecho con Astro, React y Tailwind",
+    "source": "Código",
+    "lastBuild": "Última compilación",
+    "themeBy": "Cosmin Calin · {{year}}"
+  },
+  "fallback": {
+    "translationPending": "Esta página aún no se ha traducido a este idioma. Se muestra la versión en inglés a continuación."
+  }
+}

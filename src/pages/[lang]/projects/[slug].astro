@@ -1,0 +1,138 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, path, entryBySlug, stripLocaleFromId } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import TechBadge from '@components/TechBadge.astro';
+import { Icon } from 'astro-icon/components';
+
+export async function getStaticPaths() {
+  const all = await getCollection('projects');
+  const slugs = [...new Set(all.map((e) => stripLocaleFromId(e.id)))];
+  const paths: Array<{ params: { lang: Locale; slug: string } }> = [];
+  for (const lang of LOCALES) {
+    for (const slug of slugs) {
+      paths.push({ params: { lang, slug } });
+    }
+  }
+  return paths;
+}
+
+const { lang, slug } = Astro.params as { lang: Locale; slug: string };
+const all = await getCollection('projects');
+const { entry, isFallback } = entryBySlug(all, lang, slug);
+
+if (!entry) {
+  return Astro.redirect(path(lang, 'projects'));
+}
+
+const { Content } = await render(entry);
+const data = entry.data;
+---
+
+<BaseLayout
+  locale={lang}
+  title={data.title}
+  description={data.summary}
+>
+  <nav class="mb-6 text-sm">
+    <a href={path(lang, 'projects')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+      ← {t(lang, 'nav.projects')}
+    </a>
+  </nav>
+
+  <article>
+    <header class="mb-8">
+      <div class="mb-2 flex items-center gap-3 text-xs">
+        <span class="rounded-md bg-[var(--bg-2)] px-2 py-0.5 font-mono text-[var(--fg-2)]">
+          {data.year}
+        </span>
+        <span class="text-[var(--fg-2)]">{t(lang, `categories.${data.category}`)}</span>
+        <span>·</span>
+        <span class="text-[var(--fg-2)]">{t(lang, `statuses.${data.status}`)}</span>
+      </div>
+
+      <h1 class="text-3xl font-bold tracking-tight sm:text-5xl">{data.title}</h1>
+      <p class="mt-3 max-w-3xl text-lg text-[var(--fg-2)]">{data.summary}</p>
+
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {data.tech.map((tech) => <TechBadge tech={tech} />)}
+      </div>
+
+      {data.links && (
+        <div class="mt-5 flex flex-wrap gap-2">
+          {data.links.live && (
+            <a
+              href={data.links.live}
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-500)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-accent-600)]"
+            >
+              <Icon name="lucide:external-link" class="h-4 w-4" />
+              {t(lang, 'actions.viewLive')}
+            </a>
+          )}
+          {data.links.repo && (
+            <a
+              href={data.links.repo}
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-md border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--fg)] hover:border-[var(--color-accent-500)]"
+            >
+              <Icon name="simple-icons:github" class="h-4 w-4" />
+              {t(lang, 'actions.viewCode')}
+            </a>
+          )}
+          {data.links.demo && (
+            <a
+              href={data.links.demo}
+              rel="noopener"
+              class="inline-flex items-center gap-2 rounded-md border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--fg)] hover:border-[var(--color-accent-500)]"
+            >
+              <Icon name="lucide:play" class="h-4 w-4" />
+              {t(lang, 'actions.viewDemo')}
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+
+    {isFallback && (
+      <aside class="mb-6 rounded-lg border border-[var(--color-accent-500)]/40 bg-[var(--color-accent-500)]/5 p-4 text-sm text-[var(--fg-2)]">
+        <Icon name="lucide:info" class="mr-2 inline h-4 w-4" />
+        {t(lang, 'fallback.translationPending')}
+      </aside>
+    )}
+
+    <div class="prose-portfolio max-w-3xl">
+      <Content />
+    </div>
+
+    {data.caseStudy && (
+      <section class="mt-12 grid gap-4 sm:grid-cols-2">
+        {data.caseStudy.problem && (
+          <div class="card p-5">
+            <h3 class="mb-2 font-mono text-xs uppercase tracking-wider text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">Problem</h3>
+            <p class="text-sm text-[var(--fg-2)]">{data.caseStudy.problem}</p>
+          </div>
+        )}
+        {data.caseStudy.role && (
+          <div class="card p-5">
+            <h3 class="mb-2 font-mono text-xs uppercase tracking-wider text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">Role</h3>
+            <p class="text-sm text-[var(--fg-2)]">{data.caseStudy.role}</p>
+          </div>
+        )}
+        {data.caseStudy.timeline && (
+          <div class="card p-5">
+            <h3 class="mb-2 font-mono text-xs uppercase tracking-wider text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">Timeline</h3>
+            <p class="text-sm text-[var(--fg-2)]">{data.caseStudy.timeline}</p>
+          </div>
+        )}
+        {data.caseStudy.outcome && (
+          <div class="card p-5">
+            <h3 class="mb-2 font-mono text-xs uppercase tracking-wider text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">Outcome</h3>
+            <p class="text-sm text-[var(--fg-2)]">{data.caseStudy.outcome}</p>
+          </div>
+        )}
+      </section>
+    )}
+  </article>
+</BaseLayout>

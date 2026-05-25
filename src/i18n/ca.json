@@ -1,0 +1,116 @@
+{
+  "site": {
+    "title": "Cosmin Calin",
+    "tagline": "Administrador de sistemes · SysOps · Constructor",
+    "description": "Portfoli personal de Cosmin Calin — Administrador de sistemes a T-Systems Iberia (equip internacional de Deutsche Telekom Technik), desenvolupador independent d'apps natives per a macOS, eines web i infraestructura gestionada amb Ansible."
+  },
+  "nav": {
+    "home": "Inici",
+    "about": "Sobre mi",
+    "experience": "Experiència",
+    "projects": "Projectes",
+    "contact": "Contacte",
+    "cv": "CV"
+  },
+  "actions": {
+    "viewProject": "Veure projecte",
+    "viewCode": "Codi font",
+    "viewLive": "Obrir el lloc en viu",
+    "viewDemo": "Obrir demo",
+    "downloadCV": "Descarregar CV",
+    "openMenu": "Obrir menú",
+    "closeMenu": "Tancar menú",
+    "skipToContent": "Saltar al contingut",
+    "switchTheme": "Canviar tema",
+    "themeLight": "Clar",
+    "themeDark": "Fosc",
+    "themeSystem": "Sistema",
+    "switchLanguage": "Canviar idioma",
+    "commandPalette": "Cercar i navegar",
+    "filterByTech": "Filtrar per tecnologia",
+    "clearFilter": "Treure filtre",
+    "showAll": "Mostrar tot"
+  },
+  "hero": {
+    "intro": "Hola, sóc",
+    "role": "Administrador de sistemes (N2 — SysOps) a T-Systems Iberia, actualment a l'equip internacional per a Deutsche Telekom Technik.",
+    "summary": "A les tardes i caps de setmana construeixo petites eines que intenten ser útils: un presentador bíblic per a macOS, un editor de calendaris ICS que entén les regles de recurrència, una infraestructura Ansible enfortida per al meu propi VPS.",
+    "ctaPrimary": "Veure projectes",
+    "ctaSecondary": "Sobre mi"
+  },
+  "sections": {
+    "featuredProjects": "Projectes destacats",
+    "experience": "Experiència",
+    "education": "Educació",
+    "languages": "Idiomes",
+    "skills": "Habilitats",
+    "currentRole": "Lloc actual",
+    "otherProjects": "Altres projectes",
+    "contactWays": "Com contactar-me"
+  },
+  "labels": {
+    "present": "Actualitat",
+    "current": "actual",
+    "year": "Any",
+    "tech": "Tecnologia",
+    "category": "Categoria",
+    "status": "Estat",
+    "role": "Lloc",
+    "company": "Empresa",
+    "school": "Centre",
+    "location": "Ubicació"
+  },
+  "statuses": {
+    "active": "Actiu",
+    "maintained": "Mantingut",
+    "archived": "Arxivat",
+    "experimental": "Experimental"
+  },
+  "categories": {
+    "web-app": "App web",
+    "native-app": "App nativa",
+    "library": "Llibreria",
+    "infrastructure": "Infraestructura",
+    "tool": "Eina"
+  },
+  "languages": {
+    "en": "Anglès",
+    "es": "Espanyol",
+    "ca": "Català",
+    "ro": "Romanès"
+  },
+  "languageLevels": {
+    "native": "Nadiu",
+    "full": "Professional complet"
+  },
+  "about": {
+    "title": "Sobre mi",
+    "intro": "Nascut el 2001 a Romania, criat a Tarragona, treballant a Reus. Bilingüe a casa (català i espanyol), romanès amb la família, anglès a la feina.",
+    "philosophyTitle": "Què m'importa",
+    "philosophyItems": [
+      "Infraestructura avorrida: predictible, automatitzada, documentada. L'emoció pertany a les funcions, no a les operacions.",
+      "Codi que es llegeix com pretenies. Noms, estructura i tests abans que trucs enginyosos.",
+      "Eines per a la gent que conec — esglésies, nens, equips petits — primer; per a la resta, després."
+    ],
+    "outsideWorkTitle": "Fora de la feina",
+    "outsideWork": "Participació a la meva església local, família, lectura, alguna ruta per Tarragona. Corredor lent."
+  },
+  "contact": {
+    "title": "Contacte",
+    "intro": "La manera més ràpida de contactar-me és per correu. Llegeixo tot i responc a la majoria en pocs dies.",
+    "email": "Correu",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "pgpTitle": "Xifrat",
+    "pgpHint": "Necessites enviar-me alguna cosa sensible? Escriu-me primer i et passo la meva clau PGP."
+  },
+  "footer": {
+    "builtWith": "Fet amb Astro, React i Tailwind",
+    "source": "Codi",
+    "lastBuild": "Última compilació",
+    "themeBy": "Cosmin Calin · {{year}}"
+  },
+  "fallback": {
+    "translationPending": "Aquesta pàgina encara no s'ha traduït a aquest idioma. Es mostra la versió en anglès a continuació."
+  }
+}

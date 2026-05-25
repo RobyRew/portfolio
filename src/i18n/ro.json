@@ -1,0 +1,116 @@
+{
+  "site": {
+    "title": "Cosmin Calin",
+    "tagline": "Administrator de sistem · SysOps · Constructor",
+    "description": "Portofoliul personal al lui Cosmin Calin — Administrator de sistem la T-Systems Iberia (echipa internațională Deutsche Telekom Technik), dezvoltator independent de aplicații native macOS, instrumente web și infrastructură gestionată cu Ansible."
+  },
+  "nav": {
+    "home": "Acasă",
+    "about": "Despre",
+    "experience": "Experiență",
+    "projects": "Proiecte",
+    "contact": "Contact",
+    "cv": "CV"
+  },
+  "actions": {
+    "viewProject": "Vezi proiectul",
+    "viewCode": "Cod sursă",
+    "viewLive": "Deschide site-ul live",
+    "viewDemo": "Deschide demo",
+    "downloadCV": "Descarcă CV",
+    "openMenu": "Deschide meniul",
+    "closeMenu": "Închide meniul",
+    "skipToContent": "Treci la conținut",
+    "switchTheme": "Schimbă tema",
+    "themeLight": "Lumină",
+    "themeDark": "Întuneric",
+    "themeSystem": "Sistem",
+    "switchLanguage": "Schimbă limba",
+    "commandPalette": "Caută și navighează",
+    "filterByTech": "Filtrează după tehnologie",
+    "clearFilter": "Șterge filtrul",
+    "showAll": "Arată tot"
+  },
+  "hero": {
+    "intro": "Salut, sunt",
+    "role": "Administrator de sistem (N2 — SysOps) la T-Systems Iberia, în prezent în echipa internațională pentru Deutsche Telekom Technik.",
+    "summary": "Seara și în weekend construiesc lucruri mici care încearcă să fie utile: un prezentator biblic pentru macOS, un editor de calendare ICS care înțelege regulile de recurență, o infrastructură Ansible întărită pentru propriul meu VPS.",
+    "ctaPrimary": "Vezi proiectele",
+    "ctaSecondary": "Despre mine"
+  },
+  "sections": {
+    "featuredProjects": "Proiecte recomandate",
+    "experience": "Experiență",
+    "education": "Educație",
+    "languages": "Limbi",
+    "skills": "Competențe",
+    "currentRole": "Rol actual",
+    "otherProjects": "Alte proiecte",
+    "contactWays": "Cum mă găsești"
+  },
+  "labels": {
+    "present": "Prezent",
+    "current": "actual",
+    "year": "An",
+    "tech": "Tehnologie",
+    "category": "Categorie",
+    "status": "Stare",
+    "role": "Rol",
+    "company": "Companie",
+    "school": "Școală",
+    "location": "Locație"
+  },
+  "statuses": {
+    "active": "Activ",
+    "maintained": "Întreținut",
+    "archived": "Arhivat",
+    "experimental": "Experimental"
+  },
+  "categories": {
+    "web-app": "Aplicație web",
+    "native-app": "Aplicație nativă",
+    "library": "Bibliotecă",
+    "infrastructure": "Infrastructură",
+    "tool": "Unealtă"
+  },
+  "languages": {
+    "en": "Engleză",
+    "es": "Spaniolă",
+    "ca": "Catalană",
+    "ro": "Română"
+  },
+  "languageLevels": {
+    "native": "Nativ",
+    "full": "Profesional complet"
+  },
+  "about": {
+    "title": "Despre mine",
+    "intro": "Născut în 2001 în România, crescut în Tarragona, lucrez în Reus. Bilingv acasă (catalană și spaniolă), româna cu familia, engleza la serviciu.",
+    "philosophyTitle": "Ce contează pentru mine",
+    "philosophyItems": [
+      "Infrastructură plictisitoare: predictibilă, automatizată, documentată. Emoția aparține funcționalităților, nu operațiunilor.",
+      "Cod care se citește așa cum ai intenționat. Denumiri, structură și teste înaintea trucurilor inteligente.",
+      "Unelte pentru oamenii pe care îi cunosc — biserici, copii, echipe mici — în primul rând; pentru restul, după."
+    ],
+    "outsideWorkTitle": "În afara serviciului",
+    "outsideWork": "Implicare în biserica locală, familie, lectură, drumeții ocazionale prin Tarragona. Alergător lent."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "Cel mai rapid mod de a mă contacta este prin email. Citesc tot și răspund celor mai multe într-un interval de câteva zile.",
+    "email": "Email",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "pgpTitle": "Criptat",
+    "pgpHint": "Vrei să trimiți ceva sensibil? Scrie-mi mai întâi și cere-mi cheia PGP."
+  },
+  "footer": {
+    "builtWith": "Construit cu Astro, React și Tailwind",
+    "source": "Sursă",
+    "lastBuild": "Ultima compilare",
+    "themeBy": "Cosmin Calin · {{year}}"
+  },
+  "fallback": {
+    "translationPending": "Această pagină nu a fost încă tradusă în această limbă. Mai jos se afișează versiunea în engleză."
+  }
+}
