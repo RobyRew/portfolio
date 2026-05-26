@@ -28,8 +28,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const alternates = alternateLinks(locale, Astro.url.pathname);
 
 // Build-time-injected Umami site id (set via PUBLIC_UMAMI_* env vars).
-const umamiSrc = import.meta.env['PUBLIC_UMAMI_SCRIPT_URL'];
-const umamiId  = import.meta.env['PUBLIC_UMAMI_WEBSITE_ID'];
+// Use dot notation instead of brackets
+const umamiSrc = import.meta.env.PUBLIC_UMAMI_SCRIPT_URL;
+const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 ---
 
 <!doctype html>
@@ -86,8 +87,8 @@ const umamiId  = import.meta.env['PUBLIC_UMAMI_WEBSITE_ID'];
 
     <!-- Umami analytics: cookie-less, GDPR-friendly, self-hosted. -->
     {umamiSrc && umamiId && (
-      <script defer src={umamiSrc} data-website-id={umamiId} data-do-not-track="true"></script>
-    )}
+  <script is:inline defer src={umamiSrc} data-website-id={umamiId} data-do-not-track="true"></script>
+)}
   </head>
 
   <body class="flex min-h-dvh flex-col bg-[var(--bg)] text-[var(--fg)]">
