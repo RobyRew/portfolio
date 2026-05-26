@@ -118,7 +118,7 @@ export function localeIntl(locale: Locale): string {
 }
 
 /** All locale-pair variants of a given page, for hreflang tags + locale switcher. */
-export function alternateLinks(currentLocale: Locale, currentPath: string): Array<{ locale: Locale; href: string }> {
+export function alternateLinks(_currentLocale: Locale, currentPath: string): Array<{ locale: Locale; href: string }> {
   const stripped = stripLocale(currentPath);
   return LOCALES.map((loc) => ({
     locale: loc,
