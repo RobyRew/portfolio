@@ -11,10 +11,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Env files
+# Env files — catch-all + allowlist for the committed example
 .env
-.env.production
-.env.local
+.env.*
+!.env.example
 
 # Editor / OS
 .DS_Store
