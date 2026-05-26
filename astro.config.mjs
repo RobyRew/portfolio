@@ -24,11 +24,11 @@ export default defineConfig({
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,
     },
-    fallback: {
-      es: 'en',
-      ca: 'en',
-      ro: 'en',
-    },
+    // No `fallback` — every page lives under `src/pages/[lang]/` and its
+    // `getStaticPaths` already emits one route per locale. Enabling fallback
+    // makes Astro ALSO try to mirror /en/ pages into /es/, /ca/, /ro/, which
+    // collides with the existing routes and floods the build log with
+    // "Could not render … as it conflicts with higher priority route" warnings.
   },
 
   // ── Integrations ──────────────────────────────────────────────────
