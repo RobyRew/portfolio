@@ -5,15 +5,14 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# Native deps for sharp / Astro image processing
-RUN apk add --no-cache --virtual .build-deps libc6-compat \
+# ADDED: python3, make, and g++ (required by node-gyp to build sharp)
+RUN apk add --no-cache --virtual .build-deps libc6-compat python3 make g++ \
  && apk add --no-cache vips-dev
 
-# Use npm install (NOT npm ci) so the build still works if the lockfile
-# isn't committed yet. `--legacy-peer-deps` survives strict peer-dep clashes
-# (e.g. @astrojs/check vs typescript pre-release versions).
 COPY package.json package-lock.json* ./
-RUN npm install --no-audit --no-fund --legacy-peer-deps --prefer-offline
+
+# ADDED: --platform=linux --libc=musl to force npm to grab the correct sharp pre-build for Alpine
+RUN npm install --no-audit --no-fund --legacy-peer-deps --prefer-offline --platform=linux --libc=musl
 
 COPY . .
 RUN npm run build
