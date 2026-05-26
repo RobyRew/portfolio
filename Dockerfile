@@ -42,6 +42,6 @@ USER nginx
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://127.0.0.1:8080/en/ || exit 1
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:8080/robots.txt || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
