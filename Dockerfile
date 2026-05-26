@@ -5,13 +5,20 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# ADDED: python3, make, and g++ (required by node-gyp to build sharp)
+# Install native dependencies and build tools
 RUN apk add --no-cache --virtual .build-deps libc6-compat python3 make g++ \
  && apk add --no-cache vips-dev
 
 COPY package.json package-lock.json* ./
 
-# ADDED: --platform=linux --libc=musl to force npm to grab the correct sharp pre-build for Alpine
+# ADDED: Explicitly install node-addon-api FIRST, globally or in the workspace
+RUN npm install node-addon-api
+
+# ADDED: Force npm to download the specific sharp binaries for Alpine Linux
+RUN npm install @img/sharp-linux-musl @img/sharp-libvips-linux-musl
+
+# Run your main install command.
+# We keep the platform flags just to be safe.
 RUN npm install --no-audit --no-fund --legacy-peer-deps --prefer-offline --platform=linux --libc=musl
 
 COPY . .
