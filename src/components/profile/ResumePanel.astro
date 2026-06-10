@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@i18n/utils';
+import { t, path, entriesForLocale, LOCALES } from '@i18n/utils';
+import JobCard from '@components/JobCard.astro';
+import EducationCard from '@components/EducationCard.astro';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const jobs = entriesForLocale(await getCollection('jobs'), locale).sort((a, b) =>
+  b.data.startDate.localeCompare(a.data.startDate),
+);
+const education = entriesForLocale(await getCollection('education'), locale).sort((a, b) =>
+  b.data.startDate.localeCompare(a.data.startDate),
+);
+
+// Spoken languages: native ca/es/ro, full-professional en.
+const spoken = LOCALES.map((code) => ({
+  code,
+  name: t(locale, `languages.${code}`),
+  level: t(locale, `languageLevels.${code === 'en' ? 'full' : 'native'}`),
+}));
+---
+
+<div class="space-y-10">
+  <section aria-labelledby="resume-experience">
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h3 id="resume-experience" class="text-xl font-bold tracking-tight">
+        {t(locale, 'sections.experience')}
+      </h3>
+      <a
+        href={path(locale, 'cv')}
+        class="inline-flex items-center gap-1.5 rounded-md border border-[var(--line)] px-3 py-1.5 text-sm font-medium text-[var(--fg)] transition-colors hover:border-[var(--color-accent-500)]"
+      >
+        <Icon name="lucide:file-text" class="h-4 w-4" aria-hidden="true" />
+        {t(locale, 'actions.downloadCV')}
+      </a>
+    </div>
+    <div class="space-y-5">
+      {jobs.map((entry) => <JobCard entry={entry} locale={locale} />)}
+    </div>
+  </section>
+
+  <section aria-labelledby="resume-education">
+    <h3 id="resume-education" class="mb-4 text-xl font-bold tracking-tight">
+      {t(locale, 'sections.education')}
+    </h3>
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+      {education.map((entry) => <EducationCard entry={entry} locale={locale} />)}
+    </div>
+  </section>
+
+  <section aria-labelledby="resume-languages">
+    <h3 id="resume-languages" class="mb-4 text-xl font-bold tracking-tight">
+      {t(locale, 'sections.languages')}
+    </h3>
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {spoken.map((lang) => (
+        <li class="card flex flex-col gap-0.5 p-4">
+          <span class="font-semibold text-[var(--fg)]">{lang.name}</span>
+          <span class="text-xs text-[var(--fg-2)]">{lang.level}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</div>

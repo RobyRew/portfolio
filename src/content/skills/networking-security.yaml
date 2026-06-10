@@ -1,0 +1,20 @@
+icon: lucide:shield-check
+order: 30
+items:
+  - name: Tailscale / WireGuard
+    level: 4
+    icon: simple-icons:tailscale
+    note: Zero-trust access to admin surfaces
+  - name: DNS / TLS
+    level: 4
+  - name: SSH hardening
+    level: 5
+    note: Key-only, non-standard ports, fail2ban
+  - name: Firewalls (ufw / nftables)
+    level: 4
+  - name: Web security (CSP, headers)
+    level: 4
+    note: CSP-clean sites, OWASP-aligned header sets
+  - name: OAuth 2.0 / OIDC
+    level: 3
+    note: Logto, better-auth, edge forward-auth gateways

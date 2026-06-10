@@ -1,0 +1,17 @@
+icon: lucide:server
+order: 10
+items:
+  - name: Linux (Debian / Ubuntu)
+    level: 5
+    icon: simple-icons:debian
+    note: Daily driver on servers — hardening, systemd, packaging
+  - name: macOS
+    level: 5
+    icon: simple-icons:apple
+    note: Admin + native app development
+  - name: Windows Server
+    level: 4
+    note: AD, GPO, day-2 operations at work
+  - name: Shell (zsh / bash)
+    level: 5
+    icon: simple-icons:gnubash

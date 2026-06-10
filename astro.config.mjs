@@ -35,6 +35,8 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
+      // Retired routes are 301-stubs (see nginx.conf) — keep them out of the sitemap.
+      filter: (page) => !/\/(about|contact|experience|projects)\/$/.test(page),
       i18n: {
         defaultLocale: 'en',
         locales: { en: 'en-GB', es: 'es-ES', ca: 'ca-ES', ro: 'ro-RO' },

@@ -1,0 +1,17 @@
+icon: lucide:activity
+order: 60
+items:
+  - name: Beszel
+    level: 4
+    note: Lightweight server + container monitoring
+  - name: Umami
+    level: 4
+    icon: simple-icons:umami
+    note: Cookie-less, self-hosted analytics
+  - name: Git / GitHub Actions
+    level: 4
+    icon: simple-icons:github
+  - name: Obsidian (docs-as-code)
+    level: 4
+    icon: simple-icons:obsidian
+    note: Every system documented before it ships

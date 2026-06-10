@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { t, entriesForLocale } from '@i18n/utils';
+import ProjectCard from '@components/ProjectCard.astro';
+import ProjectFilter from '@islands/ProjectFilter';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const projects = entriesForLocale(await getCollection('projects'), locale).sort(
+  (a, b) =>
+    Number(b.data.featured) - Number(a.data.featured) ||
+    a.data.order - b.data.order ||
+    b.data.year - a.data.year,
+);
+
+// Only offer filter chips for techs that appear in 2+ projects — one-off
+// tags add noise without narrowing anything. Cards keep their full list.
+const techCounts = new Map<string, number>();
+for (const project of projects) {
+  for (const tech of project.data.tech) {
+    techCounts.set(tech, (techCounts.get(tech) ?? 0) + 1);
+  }
+}
+const allTech = [...techCounts.entries()].filter(([, n]) => n >= 2).map(([tech]) => tech);
+---
+
+<ProjectFilter
+  client:visible
+  techs={allTech}
+  showAllLabel={t(locale, 'actions.showAll')}
+  filterLabel={t(locale, 'actions.filterByTech')}
+/>
+
+<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+  {projects.map((entry) => (
+    <div data-tech={entry.data.tech.join('|')}>
+      <ProjectCard entry={entry} locale={locale} />
+    </div>
+  ))}
+</div>

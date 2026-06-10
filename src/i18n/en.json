@@ -1,15 +1,9 @@
 {
   "site": {
     "title": "Cosmin Calin",
-    "tagline": "System Administrator · SysOps · Builder",
     "description": "Personal portfolio of Cosmin Calin — System Administrator at T-Systems Iberia (Deutsche Telekom Technik international team), independent developer of native macOS apps, web tools and Ansible-managed infrastructure."
   },
   "nav": {
-    "home": "Home",
-    "about": "About",
-    "experience": "Experience",
-    "projects": "Projects",
-    "contact": "Contact",
     "cv": "CV"
   },
   "actions": {
@@ -17,48 +11,55 @@
     "viewCode": "Source code",
     "viewLive": "Open live site",
     "viewDemo": "Open demo",
-    "downloadCV": "Download CV",
+    "downloadCV": "View CV",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu",
     "skipToContent": "Skip to content",
-    "switchTheme": "Switch theme",
+    "switchTheme": "Appearance",
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
+    "accent": "Accent colour",
     "switchLanguage": "Switch language",
     "commandPalette": "Search & navigate",
     "filterByTech": "Filter by technology",
-    "clearFilter": "Clear filter",
     "showAll": "Show all"
   },
-  "hero": {
-    "intro": "Hi, I'm",
-    "role": "System Administrator (N2 — SysOps) at T-Systems Iberia, currently on the international team for Deutsche Telekom Technik.",
-    "summary": "On evenings and weekends I build small things that try to be useful: a Bible presenter for macOS, an ICS calendar editor that actually understands recurrence rules, a hardened Ansible setup for my own VPS.",
-    "ctaPrimary": "See projects",
-    "ctaSecondary": "Read about me"
+  "accents": {
+    "mint": "Mint",
+    "blue": "Blue",
+    "violet": "Violet",
+    "amber": "Amber"
+  },
+  "tabs": {
+    "ariaLabel": "Profile sections",
+    "projects": "Projects",
+    "resume": "Resume",
+    "skills": "Skills",
+    "gallery": "Gallery"
+  },
+  "profile": {
+    "headline": "System Administrator · SysOps · Builder",
+    "bio": "👨‍💻 System Administrator (N2 — SysOps) at T-Systems Iberia, on the international team for Deutsche Telekom Technik. 🌍 Evenings and weekends I build small tools that try to be useful — for churches, kids and small teams.",
+    "avatarAlt": "Portrait of Cosmin Calin",
+    "cardAria": "Profile summary",
+    "socialsAria": "Profiles and contact",
+    "facts": {
+      "roleLabel": "Role",
+      "role": "System Administrator at T-Systems Iberia",
+      "bornLabel": "Born",
+      "locationLabel": "Location",
+      "location": "Tarragona, Spain",
+      "passionLabel": "Passion",
+      "passion": "Boring infrastructure, honest tools"
+    }
   },
   "sections": {
-    "featuredProjects": "Featured projects",
     "experience": "Experience",
     "education": "Education",
-    "languages": "Languages",
-    "skills": "Skills",
-    "currentRole": "Current role",
-    "otherProjects": "Other projects",
-    "contactWays": "Ways to reach me"
+    "languages": "Languages"
   },
   "labels": {
-    "present": "Present",
-    "current": "current",
-    "year": "Year",
-    "tech": "Tech",
-    "category": "Category",
-    "status": "Status",
-    "role": "Role",
-    "company": "Company",
-    "school": "School",
-    "location": "Location"
+    "present": "Present"
   },
   "statuses": {
     "active": "Active",
@@ -83,31 +84,33 @@
     "native": "Native",
     "full": "Full professional"
   },
-  "about": {
-    "title": "About",
-    "intro": "Born in 2001 in Romania, raised in Tarragona, working in Reus. Bilingual at home (Catalan and Spanish), Romanian with family, English at work.",
-    "philosophyTitle": "What I care about",
-    "philosophyItems": [
-      "Boring infrastructure: predictable, automated, documented. Excitement belongs in features, not in operations.",
-      "Code that reads like you meant it. Naming, structure and tests before clever tricks.",
-      "Tools for the people I know — churches, kids, small teams — first; for everyone else, second."
-    ],
-    "outsideWorkTitle": "Outside work",
-    "outsideWork": "Local church involvement, family, reading, the occasional hike around Tarragona. Slow runner."
+  "skills": {
+    "levelAria": "{{name}}: level {{level}} of 5",
+    "categories": {
+      "systems": "Operating systems",
+      "infrastructure": "Infrastructure & automation",
+      "networking-security": "Networking & security",
+      "development": "Development",
+      "data-auth": "Data & identity",
+      "observability-tooling": "Observability & tooling"
+    }
   },
-  "contact": {
-    "title": "Contact",
-    "intro": "The fastest way to reach me is email. I read everything, reply to most of it within a few days.",
-    "email": "Email",
-    "github": "GitHub",
-    "linkedin": "LinkedIn",
-    "pgpTitle": "Encrypted",
-    "pgpHint": "Want to send something sensitive? Email me first and ask for my PGP key."
+  "gallery": {
+    "viewLarger": "View larger",
+    "empty": "No photos yet — check back soon.",
+    "close": "Close",
+    "prev": "Previous image",
+    "next": "Next image",
+    "dialogAria": "Image viewer"
+  },
+  "legal": {
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "lastUpdated": "Last updated"
   },
   "footer": {
     "builtWith": "Built with Astro, React and Tailwind",
     "source": "Source",
-    "lastBuild": "Last built",
     "themeBy": "Cosmin Calin · {{year}}"
   },
   "fallback": {

@@ -79,7 +79,7 @@ export function entriesForLocale<T extends { data: { locale: Locale } }>(
 }
 
 /** Per-slug fallback. Strips the `en/`, `es/` etc. prefix from the entry id. */
-export function entryBySlug<T extends CollectionEntry<'projects' | 'jobs' | 'education'>>(
+export function entryBySlug<T extends CollectionEntry<'projects' | 'jobs' | 'education' | 'legal'>>(
   all: T[],
   locale: Locale,
   slug: string,

@@ -1,0 +1,73 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { Locale } from '@i18n/utils';
+import { t } from '@i18n/utils';
+import { IDENTITY } from '@config/site';
+import cover from '@/assets/profile/cover.jpg';
+import avatar from '@/assets/profile/profile.jpg';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+// Full-resolution avatar for the lightbox (the inline one is a small circle).
+const avatarFull = await getImage({ src: avatar, width: 800, format: 'webp' });
+---
+
+<header class="relative no-print">
+  <!-- Cover -->
+  <div class="relative h-44 w-full overflow-hidden sm:h-60 lg:h-72">
+    <Image
+      src={cover}
+      alt=""
+      widths={[640, 1024, 1440, 1920]}
+      sizes="100vw"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-black/20" aria-hidden="true"></div>
+    <!-- Fade into the page background so the overlap reads in both themes -->
+    <div
+      class="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-[var(--bg)] from-20% via-[var(--bg)]/60 via-55% to-transparent"
+      aria-hidden="true"
+    >
+    </div>
+  </div>
+
+  <!-- Avatar + name, overlapping the cover -->
+  <div class="safe-area-x mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+    <!-- Mobile: avatar overlaps the cover, name sits below it on plain
+         background (the cover is too busy behind a wrapped two-line name).
+         ≥sm: classic side-by-side overlap. -->
+    <div class="-mt-14 flex flex-col gap-2 sm:-mt-20 sm:flex-row sm:items-end sm:gap-6">
+      <button
+        type="button"
+        data-lightbox
+        data-full={avatarFull.src}
+        data-alt={t(locale, 'profile.avatarAlt')}
+        data-caption={IDENTITY.name}
+        class="group relative w-fit shrink-0 cursor-zoom-in rounded-full"
+        aria-label={t(locale, 'gallery.viewLarger')}
+      >
+        <Image
+          src={avatar}
+          alt={t(locale, 'profile.avatarAlt')}
+          width={320}
+          height={320}
+          class="h-28 w-28 rounded-full border-4 border-[var(--bg)] object-cover shadow-lg transition-transform duration-200 group-hover:scale-[1.03] sm:h-40 sm:w-40"
+          loading="eager"
+        />
+      </button>
+      <div class="min-w-0 pb-1 sm:pb-3">
+        <h1 class="truncate text-3xl font-bold tracking-tight text-[var(--fg)] [text-shadow:0_1px_14px_var(--bg),0_0_4px_var(--bg)] sm:text-4xl">
+          {IDENTITY.name}
+        </h1>
+        <p class="mt-1 text-sm text-[var(--fg-2)] [text-shadow:0_1px_10px_var(--bg)] sm:text-base">
+          {t(locale, 'profile.headline')}
+        </p>
+      </div>
+    </div>
+  </div>
+</header>

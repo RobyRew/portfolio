@@ -2,7 +2,8 @@
 import type { Locale } from '@i18n/utils';
 import { t, path, alternateLinks } from '@i18n/utils';
 import { Icon } from 'astro-icon/components';
-import ThemeToggle from '@islands/ThemeToggle';
+import { FEATURES } from '@config/site';
+import AppearanceMenu from '@islands/AppearanceMenu';
 import LocaleSwitcher from '@islands/LocaleSwitcher';
 import CommandPalette from '@islands/CommandPalette';
 
@@ -12,35 +13,32 @@ export interface Props {
 }
 const { locale, currentPath } = Astro.props;
 
+// The site is a single profile page; nav entries deep-link into its tabs.
+// On the profile page itself the Tabs script picks the hash change up
+// without a reload; from subpages it navigates home first.
 const nav = [
-  { href: path(locale),               key: 'nav.home' },
-  { href: path(locale, 'about'),      key: 'nav.about' },
-  { href: path(locale, 'experience'), key: 'nav.experience' },
-  { href: path(locale, 'projects'),   key: 'nav.projects' },
-  { href: path(locale, 'contact'),    key: 'nav.contact' },
+  { href: `${path(locale)}#projects`, key: 'tabs.projects' },
+  { href: `${path(locale)}#resume`, key: 'tabs.resume' },
+  { href: `${path(locale)}#skills`, key: 'tabs.skills' },
+  ...(FEATURES.gallery ? [{ href: `${path(locale)}#gallery`, key: 'tabs.gallery' }] : []),
 ] as const;
-
-const isActive = (href: string) => {
-  if (href === path(locale) && currentPath === path(locale)) return true;
-  if (href === path(locale)) return false;
-  return currentPath.startsWith(href);
-};
 
 const localeAlternates = alternateLinks(locale, currentPath);
 const dict = {
-  home: t(locale, 'nav.home'),
-  about: t(locale, 'nav.about'),
-  experience: t(locale, 'nav.experience'),
-  projects: t(locale, 'nav.projects'),
-  contact: t(locale, 'nav.contact'),
   switchTheme: t(locale, 'actions.switchTheme'),
   themeLight: t(locale, 'actions.themeLight'),
   themeDark: t(locale, 'actions.themeDark'),
   themeSystem: t(locale, 'actions.themeSystem'),
+  accent: t(locale, 'actions.accent'),
   switchLanguage: t(locale, 'actions.switchLanguage'),
   openMenu: t(locale, 'actions.openMenu'),
-  closeMenu: t(locale, 'actions.closeMenu'),
   commandPalette: t(locale, 'actions.commandPalette'),
+};
+const accentNames = {
+  mint: t(locale, 'accents.mint'),
+  blue: t(locale, 'accents.blue'),
+  violet: t(locale, 'accents.violet'),
+  amber: t(locale, 'accents.amber'),
 };
 ---
 
@@ -55,12 +53,10 @@ const dict = {
       {nav.map((item) => (
         <a
           href={item.href}
-          class:list={[
-            'rounded-md px-3 py-1.5 text-sm transition-colors',
-            isActive(item.href)
-              ? 'bg-[var(--bg-2)] text-[var(--fg)]'
-              : 'text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)]',
-          ]}
+          data-cmd
+          data-cmd-label={t(locale, item.key)}
+          data-cmd-group="navigate"
+          class="rounded-md px-3 py-1.5 text-sm text-[var(--fg-2)] transition-colors hover:bg-[var(--bg-2)] hover:text-[var(--fg)]"
         >
           {t(locale, item.key)}
         </a>
@@ -68,24 +64,24 @@ const dict = {
     </nav>
 
     <div class="ml-auto flex items-center gap-1">
-      <CommandPalette
-        client:idle
-        locale={locale}
-        triggerLabel={dict.commandPalette}
-      />
+      {FEATURES.commandPalette && (
+        <CommandPalette client:idle locale={locale} triggerLabel={dict.commandPalette} />
+      )}
       <LocaleSwitcher
         client:idle
         locale={locale}
         alternates={localeAlternates}
         label={dict.switchLanguage}
       />
-      <ThemeToggle
+      <AppearanceMenu
         client:idle
         labels={{
           toggle: dict.switchTheme,
           light: dict.themeLight,
           dark: dict.themeDark,
           system: dict.themeSystem,
+          accent: dict.accent,
+          accents: accentNames,
         }}
       />
 
@@ -101,12 +97,7 @@ const dict = {
           {nav.map((item) => (
             <a
               href={item.href}
-              class:list={[
-                'block rounded-md px-3 py-2 text-sm transition-colors',
-                isActive(item.href)
-                  ? 'bg-[var(--bg-2)] text-[var(--fg)]'
-                  : 'text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)]',
-              ]}
+              class="block rounded-md px-3 py-2 text-sm text-[var(--fg-2)] transition-colors hover:bg-[var(--bg-2)] hover:text-[var(--fg)]"
             >
               {t(locale, item.key)}
             </a>
@@ -116,3 +107,13 @@ const dict = {
     </div>
   </div>
 </header>
+
+<script>
+  // Close the mobile <details> menu after choosing an entry — hash-only
+  // navigation does not reload the page, so it would otherwise stay open.
+  document.querySelectorAll<HTMLDetailsElement>('header details').forEach((details) => {
+    details.querySelectorAll('a').forEach((link) =>
+      link.addEventListener('click', () => details.removeAttribute('open')),
+    );
+  });
+</script>

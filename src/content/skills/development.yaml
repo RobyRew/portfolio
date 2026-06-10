@@ -1,0 +1,24 @@
+icon: lucide:code-2
+order: 40
+items:
+  - name: TypeScript
+    level: 4
+    icon: simple-icons:typescript
+  - name: Astro
+    level: 4
+    icon: simple-icons:astro
+    note: This site, MapSwitch, Kingdom's Kids
+  - name: React
+    level: 3
+    icon: simple-icons:react
+  - name: Swift / SwiftUI
+    level: 3
+    icon: simple-icons:swift
+    note: TopPresenter — native macOS app
+  - name: Node.js
+    level: 4
+    icon: simple-icons:nodedotjs
+  - name: Python
+    level: 3
+    icon: simple-icons:python
+    note: Tooling and automation scripts

@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@i18n/utils';
+import { t } from '@i18n/utils';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const entries = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
+
+// Pre-render the full-size variants the lightbox will open.
+const items = await Promise.all(
+  entries.map(async (entry) => ({
+    ...entry.data,
+    full: await getImage({ src: entry.data.image, width: 1600, format: 'webp' }),
+  })),
+);
+---
+
+{items.length === 0 ? (
+  <p class="rounded-lg border border-dashed border-[var(--line)] p-10 text-center text-sm text-[var(--fg-2)]">
+    {t(locale, 'gallery.empty')}
+  </p>
+) : (
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+    {items.map((item) => (
+      <button
+        type="button"
+        class="gallery-item group relative cursor-zoom-in overflow-hidden rounded-lg"
+        data-lightbox
+        data-group="gallery"
+        data-full={item.full.src}
+        data-alt={item.alt}
+        data-caption={item.title}
+      >
+        <Image
+          src={item.image}
+          alt={item.alt}
+          width={600}
+          height={600}
+          class="aspect-square h-auto w-full object-cover"
+          loading="lazy"
+        />
+        <span class="gallery-veil absolute inset-0 grid place-items-center bg-black/50" aria-hidden="true">
+          <span class="flex translate-y-2 items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-gray-900 transition-transform duration-200 group-hover:translate-y-0">
+            <Icon name="lucide:external-link" class="h-4 w-4" />
+            {t(locale, 'gallery.viewLarger')}
+          </span>
+        </span>
+        <span class="sr-only">{item.title}</span>
+      </button>
+    ))}
+  </div>
+)}

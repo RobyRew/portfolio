@@ -83,4 +83,55 @@ const education = defineCollection({
   }),
 });
 
-export const collections = { jobs, projects, education };
+/**
+ * Skill categories. One YAML file per category; the category label is
+ * localised via the i18n key `skills.categories.<id>` (file basename).
+ * Item names are proper nouns (Linux, Ansible…) and stay untranslated.
+ */
+const skills = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/skills' }),
+  schema: z.object({
+    icon: z.string(),                               // lucide icon name
+    order: z.number().int().default(100),
+    items: z
+      .array(
+        z.object({
+          name: z.string().min(1).max(60),
+          /** 1–5 self-assessed proficiency, drives the meter in the Skills tab. */
+          level: z.number().int().min(1).max(5).default(3),
+          icon: z.string().optional(),              // optional simple-icons name
+          note: z.string().max(120).optional(),
+        }),
+      )
+      .min(1),
+  }),
+});
+
+/**
+ * Personal gallery. Images live in src/assets/gallery and are optimised
+ * by astro:assets; `image()` validates the path at build time.
+ */
+const gallery = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/gallery' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      alt: z.string().min(10),                      // a11y: real description required
+      image: image(),
+      order: z.number().int().default(100),
+      tags: z.array(z.string()).default([]),
+    }),
+});
+
+/** Legal documents (terms, privacy) — one markdown file per locale. */
+const legal = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/legal' }),
+  schema: z.object({
+    locale,
+    title: z.string(),
+    lastUpdated: isoDate,
+    summary: z.string().optional(),
+  }),
+});
+
+export const collections = { jobs, projects, education, skills, gallery, legal };

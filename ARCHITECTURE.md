@@ -223,3 +223,44 @@ portfolio/
 - **Q3 — Contact form**: (a) Cloudflare Worker → email, (b) Formspree / Web3Forms (free tier), (c) self-hosted listmonk on the VPS, (d) just an email link + GPG key, no form.
 - **Q4 — Domain**: stays at `cosmincalin.es`?
 - **Q5 — Featured projects**: which of the 13 do you want highlighted on the home page? My default pick: TopPresenter, calendar-event-generator, powerpoint-extractor, kingdomskids, infrastructure (the Ansible repo itself).
+
+---
+
+## 11. v3 — Profile-page rewrite (June 2026)
+
+Status: **SHIPPED** (branch `feat/profile-rewrite`)
+
+The multi-page brochure layout (home/about/experience/projects/contact) was
+replaced with a single **profile page**: cover photo + avatar + bio card,
+then four tabs — Projects, Resume, Skills, Gallery. Detail pages (`/projects/<slug>`),
+the printable `/cv` and new `/legal/{terms,privacy}` pages hang off it.
+
+### Decisions
+
+- **Tabs are URL state, not pages.** The WAI-ARIA tabs pattern with the hash
+  (`#projects`, `#resume`, …) as the source of truth: deep-linkable, sharable,
+  back-button-safe, zero framework. Panels are server-rendered into the HTML
+  (all of them) so SEO and no-JS readers get the full document; a `<noscript>`
+  style unhides everything and hides the tab bar. Retired routes 301 in nginx
+  *and* ship meta-refresh stubs for the dev server.
+- **Interactivity budget.** New UI (tabs, social tooltips, image lightbox)
+  is dependency-free: CSS tooltips with `:focus-within`, native `<dialog>`
+  for the lightbox (free focus trap + Esc + inert background). React islands
+  remain only where state is genuinely complex: command palette (`cmdk`),
+  locale switcher, appearance menu, project tech-filter.
+- **Theming**: light/dark/system plus four accent palettes (mint default,
+  blue, violet, amber) — `data-theme` + `data-accent` on `<html>`, persisted
+  in `localStorage`, applied by the pre-paint inline bootstrap so there is no
+  flash. Accent palettes only override the three `--color-accent-*` steps.
+- **Single source of truth**: `src/config/site.ts` (identity, socials,
+  feature flags), `src/i18n/*.json` (every localised string), content
+  collections (everything editorial). Three new collections: `skills`
+  (YAML categories with 1–5 levels), `gallery` (images validated by
+  `image()`), `legal` (markdown × 4 locales).
+- **Legal**: terms (incl. LSSI-CE site identification) + GDPR-aware privacy
+  policy in all four languages, linked from the footer. The privacy text
+  commits to being updated *before* any sign-in ever ships.
+- **Auth-ready, not auth-laden**: `src/lib/auth/` defines an OIDC-shaped
+  `AuthProvider` interface and a disabled null provider. No Logto SDK ships
+  in the static bundle; `PUBLIC_AUTH_PROVIDER=logto` fails the build until
+  the adapter + server output exist. Cutover checklist in `src/lib/auth/README.md`.

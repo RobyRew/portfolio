@@ -2,7 +2,13 @@
 
 Personal portfolio at [cosmincalin.es](https://cosmincalin.es).
 
+**Format** (v3, June 2026): single profile page — cover photo, avatar, bio card with social tooltips, and four deep-linkable tabs (`#projects`, `#resume`, `#skills`, `#gallery`). Project detail pages, a printable CV and legal pages (terms + privacy, all four locales) hang off it. Appearance menu offers light/dark/system theme **and** four accent palettes (mint/blue/violet/amber), both persisted in `localStorage` and applied before first paint.
+
 **Stack**: Astro 5 (islands architecture) · React 19 (interactive widgets only) · Tailwind CSS 4 (via `@theme`) · TypeScript 5.9 (strict) · Self-hosted Inter + JetBrains Mono · `astro-icon` (Lucide + Simple Icons, tree-shaken) · `cmdk` (command palette).
+
+**Structure**: site identity/socials/feature-flags in `src/config/site.ts`; all localised strings in `src/i18n/*.json`; all content as typed collections (`projects`, `jobs`, `education`, `skills`, `gallery`, `legal`) validated by Zod. Tabs, tooltips and the image lightbox are dependency-free (ARIA tabs pattern, CSS tooltips, native `<dialog>`); React islands are reserved for the command palette, locale switcher, appearance menu and project filter.
+
+**Auth**: none today — but Logto-ready. `src/lib/auth/` defines a provider-agnostic interface with a disabled null provider; the cutover checklist lives in [`src/lib/auth/README.md`](src/lib/auth/README.md).
 
 **Deployment**: Multi-stage Dockerfile (Node 20-alpine build → `nginxinc/nginx-unprivileged:alpine` runtime). Served via Dokploy + Traefik on the IONOS VPS.
 
@@ -50,6 +56,7 @@ See [TRANSLATIONS_NEEDED.md](TRANSLATIONS_NEEDED.md) for the list of strings sti
 |---|---|---|
 | `PUBLIC_UMAMI_SCRIPT_URL`  | URL of `script.js` on your self-hosted Umami | Optional |
 | `PUBLIC_UMAMI_WEBSITE_ID`  | Umami site ID (from Umami → Websites → Edit) | Optional |
+| `PUBLIC_AUTH_PROVIDER`     | `none` (default). `logto` is reserved for the future SSO cutover — the build fails loudly if set before the adapter exists (`src/lib/auth/README.md`) | Optional |
 
 Both go into Dokploy's "Environment" tab on the portfolio app. No analytics snippet ships if either is missing.
 

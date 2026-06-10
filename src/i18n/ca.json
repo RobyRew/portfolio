@@ -1,64 +1,65 @@
 {
   "site": {
     "title": "Cosmin Calin",
-    "tagline": "Administrador de sistemes · SysOps · Constructor",
-    "description": "Portfoli personal de Cosmin Calin — Administrador de sistemes a T-Systems Iberia (equip internacional de Deutsche Telekom Technik), desenvolupador independent d'apps natives per a macOS, eines web i infraestructura gestionada amb Ansible."
+    "description": "Portafolis personal de Cosmin Calin — Administrador de Sistemes a T-Systems Iberia (equip internacional de Deutsche Telekom Technik), desenvolupador independent d'apps natives per a macOS, eines web i infraestructura gestionada amb Ansible."
   },
   "nav": {
-    "home": "Inici",
-    "about": "Sobre mi",
-    "experience": "Experiència",
-    "projects": "Projectes",
-    "contact": "Contacte",
     "cv": "CV"
   },
   "actions": {
     "viewProject": "Veure projecte",
     "viewCode": "Codi font",
-    "viewLive": "Obrir el lloc en viu",
-    "viewDemo": "Obrir demo",
-    "downloadCV": "Descarregar CV",
-    "openMenu": "Obrir menú",
-    "closeMenu": "Tancar menú",
-    "skipToContent": "Saltar al contingut",
-    "switchTheme": "Canviar tema",
+    "viewLive": "Obrir el lloc",
+    "viewDemo": "Obrir la demo",
+    "downloadCV": "Veure CV",
+    "openMenu": "Obrir el menú",
+    "skipToContent": "Salta al contingut",
+    "switchTheme": "Aparença",
     "themeLight": "Clar",
     "themeDark": "Fosc",
     "themeSystem": "Sistema",
-    "switchLanguage": "Canviar idioma",
+    "accent": "Color d'accent",
+    "switchLanguage": "Canviar d'idioma",
     "commandPalette": "Cercar i navegar",
     "filterByTech": "Filtrar per tecnologia",
-    "clearFilter": "Treure filtre",
-    "showAll": "Mostrar tot"
+    "showAll": "Mostra-ho tot"
   },
-  "hero": {
-    "intro": "Hola, sóc",
-    "role": "Administrador de sistemes (N2 — SysOps) a T-Systems Iberia, actualment a l'equip internacional per a Deutsche Telekom Technik.",
-    "summary": "A les tardes i caps de setmana construeixo petites eines que intenten ser útils: un presentador bíblic per a macOS, un editor de calendaris ICS que entén les regles de recurrència, una infraestructura Ansible enfortida per al meu propi VPS.",
-    "ctaPrimary": "Veure projectes",
-    "ctaSecondary": "Sobre mi"
+  "accents": {
+    "mint": "Menta",
+    "blue": "Blau",
+    "violet": "Violeta",
+    "amber": "Ambre"
+  },
+  "tabs": {
+    "ariaLabel": "Seccions del perfil",
+    "projects": "Projectes",
+    "resume": "Currículum",
+    "skills": "Habilitats",
+    "gallery": "Galeria"
+  },
+  "profile": {
+    "headline": "Administrador de Sistemes · SysOps · Builder",
+    "bio": "👨‍💻 Administrador de Sistemes (N2 — SysOps) a T-Systems Iberia, a l'equip internacional de Deutsche Telekom Technik. 🌍 Als vespres i els caps de setmana construeixo petites eines que intenten ser útils — per a esglésies, nens i equips petits.",
+    "avatarAlt": "Retrat de Cosmin Calin",
+    "cardAria": "Resum del perfil",
+    "socialsAria": "Perfils i contacte",
+    "facts": {
+      "roleLabel": "Càrrec",
+      "role": "Administrador de Sistemes a T-Systems Iberia",
+      "bornLabel": "Naixement",
+      "locationLabel": "Ubicació",
+      "location": "Tarragona, Espanya",
+      "passionLabel": "Passió",
+      "passion": "Infraestructura avorrida, eines honestes"
+    }
   },
   "sections": {
-    "featuredProjects": "Projectes destacats",
     "experience": "Experiència",
-    "education": "Educació",
-    "languages": "Idiomes",
-    "skills": "Habilitats",
-    "currentRole": "Lloc actual",
-    "otherProjects": "Altres projectes",
-    "contactWays": "Com contactar-me"
+    "education": "Formació",
+    "languages": "Idiomes"
   },
   "labels": {
-    "present": "Actualitat",
-    "current": "actual",
-    "year": "Any",
-    "tech": "Tecnologia",
-    "category": "Categoria",
-    "status": "Estat",
-    "role": "Lloc",
-    "company": "Empresa",
-    "school": "Centre",
-    "location": "Ubicació"
+    "present": "Actualitat"
   },
   "statuses": {
     "active": "Actiu",
@@ -80,37 +81,39 @@
     "ro": "Romanès"
   },
   "languageLevels": {
-    "native": "Nadiu",
+    "native": "Natiu",
     "full": "Professional complet"
   },
-  "about": {
-    "title": "Sobre mi",
-    "intro": "Nascut el 2001 a Romania, criat a Tarragona, treballant a Reus. Bilingüe a casa (català i espanyol), romanès amb la família, anglès a la feina.",
-    "philosophyTitle": "Què m'importa",
-    "philosophyItems": [
-      "Infraestructura avorrida: predictible, automatitzada, documentada. L'emoció pertany a les funcions, no a les operacions.",
-      "Codi que es llegeix com pretenies. Noms, estructura i tests abans que trucs enginyosos.",
-      "Eines per a la gent que conec — esglésies, nens, equips petits — primer; per a la resta, després."
-    ],
-    "outsideWorkTitle": "Fora de la feina",
-    "outsideWork": "Participació a la meva església local, família, lectura, alguna ruta per Tarragona. Corredor lent."
+  "skills": {
+    "levelAria": "{{name}}: nivell {{level}} de 5",
+    "categories": {
+      "systems": "Sistemes operatius",
+      "infrastructure": "Infraestructura i automatització",
+      "networking-security": "Xarxes i seguretat",
+      "development": "Desenvolupament",
+      "data-auth": "Dades i identitat",
+      "observability-tooling": "Observabilitat i eines"
+    }
   },
-  "contact": {
-    "title": "Contacte",
-    "intro": "La manera més ràpida de contactar-me és per correu. Llegeixo tot i responc a la majoria en pocs dies.",
-    "email": "Correu",
-    "github": "GitHub",
-    "linkedin": "LinkedIn",
-    "pgpTitle": "Xifrat",
-    "pgpHint": "Necessites enviar-me alguna cosa sensible? Escriu-me primer i et passo la meva clau PGP."
+  "gallery": {
+    "viewLarger": "Veure en gran",
+    "empty": "Encara no hi ha fotos — torna aviat.",
+    "close": "Tancar",
+    "prev": "Imatge anterior",
+    "next": "Imatge següent",
+    "dialogAria": "Visor d'imatges"
+  },
+  "legal": {
+    "terms": "Termes d'ús",
+    "privacy": "Privacitat",
+    "lastUpdated": "Darrera actualització"
   },
   "footer": {
     "builtWith": "Fet amb Astro, React i Tailwind",
     "source": "Codi",
-    "lastBuild": "Última compilació",
     "themeBy": "Cosmin Calin · {{year}}"
   },
   "fallback": {
-    "translationPending": "Aquesta pàgina encara no s'ha traduït a aquest idioma. Es mostra la versió en anglès a continuació."
+    "translationPending": "Aquesta pàgina encara no està traduïda a aquest idioma. Es mostra la versió en anglès."
   }
 }

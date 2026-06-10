@@ -23,7 +23,7 @@ const all = await getCollection('projects');
 const { entry, isFallback } = entryBySlug(all, lang, slug);
 
 if (!entry) {
-  return Astro.redirect(path(lang, 'projects'));
+  return Astro.redirect(`${path(lang)}#projects`);
 }
 
 const { Content } = await render(entry);
@@ -36,8 +36,8 @@ const data = entry.data;
   description={data.summary}
 >
   <nav class="mb-6 text-sm">
-    <a href={path(lang, 'projects')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
-      ← {t(lang, 'nav.projects')}
+    <a href={`${path(lang)}#projects`} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+      ← {t(lang, 'tabs.projects')}
     </a>
   </nav>
 

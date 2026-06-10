@@ -2,10 +2,14 @@
 import type { Locale } from '@i18n/utils';
 import { t, path } from '@i18n/utils';
 import { Icon } from 'astro-icon/components';
+import { SOCIALS } from '@config/site';
 
 export interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
+
+const github = SOCIALS.find((s) => s.id === 'github');
+const linkedin = SOCIALS.find((s) => s.id === 'linkedin');
 ---
 
 <footer class="border-t border-[var(--line)] no-print">
@@ -18,18 +22,33 @@ const year = new Date().getFullYear();
       <a href={path(locale, 'cv')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
         {t(locale, 'nav.cv')}
       </a>
-      <a href="https://github.com/robyrew" rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
-        <Icon name="simple-icons:github" class="h-4 w-4" /> GitHub
-      </a>
-      <a href="https://linkedin.com/in/cosmincaliin" rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
-        <Icon name="simple-icons:linkedin" class="h-4 w-4" /> LinkedIn
-      </a>
+      {github && (
+        <a href={github.url} rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+          <Icon name="simple-icons:github" class="h-4 w-4" /> GitHub
+        </a>
+      )}
+      {linkedin && (
+        <a href={linkedin.url} rel="me noopener" class="flex items-center gap-1 text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+          <Icon name="simple-icons:linkedin" class="h-4 w-4" /> LinkedIn
+        </a>
+      )}
       <a href="https://github.com/cosmincalin/portfolio" rel="noopener" class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
         {t(locale, 'footer.source')}
       </a>
     </div>
   </div>
-  <p class="px-4 pb-6 text-center text-xs text-[var(--fg-2)] sm:px-6 lg:px-8">
-    {t(locale, 'footer.builtWith')}
-  </p>
+
+  <div class="mx-auto flex max-w-5xl flex-col items-center gap-2 px-4 pb-6 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
+    <p class="text-xs text-[var(--fg-2)]">
+      {t(locale, 'footer.builtWith')}
+    </p>
+    <div class="flex items-center gap-4 text-xs">
+      <a href={path(locale, 'legal', 'terms')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        {t(locale, 'legal.terms')}
+      </a>
+      <a href={path(locale, 'legal', 'privacy')} class="text-[var(--fg-2)] hover:text-[var(--fg)] hover:underline">
+        {t(locale, 'legal.privacy')}
+      </a>
+    </div>
+  </div>
 </footer>

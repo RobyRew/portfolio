@@ -1,0 +1,29 @@
+---
+/**
+ * Static redirect stub for retired routes. nginx issues a real 301 in
+ * production (see nginx.conf); this page covers the dev server and any
+ * mirror serving the raw build output.
+ */
+export interface Props {
+  to: string;
+}
+const { to } = Astro.props;
+const target = new URL(to, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${to}`} />
+    <link rel="canonical" href={target} />
+    <script is:inline define:vars={{ to }}>
+      window.location.replace(to);
+    </script>
+  </head>
+  <body>
+    <p>Moved — <a href={to}>continue here</a>.</p>
+  </body>
+</html>

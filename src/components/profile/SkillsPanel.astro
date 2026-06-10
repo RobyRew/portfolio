@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@i18n/utils';
+import { t } from '@i18n/utils';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const categories = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+  {categories.map((category) => (
+    <section class="card p-5 sm:p-6" aria-labelledby={`skills-${category.id}`}>
+      <h3 id={`skills-${category.id}`} class="mb-4 flex items-center gap-2 text-base font-semibold">
+        <Icon
+          name={category.data.icon}
+          class="h-5 w-5 text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]"
+          aria-hidden="true"
+        />
+        {t(locale, `skills.categories.${category.id}`)}
+      </h3>
+
+      <ul class="space-y-3">
+        {category.data.items.map((item) => (
+          <li class="text-sm">
+            <div class="flex items-center justify-between gap-3">
+              <span class="flex items-center gap-2 text-[var(--fg)]">
+                {item.icon && <Icon name={item.icon} class="h-4 w-4 text-[var(--fg-2)]" aria-hidden="true" />}
+                {item.name}
+              </span>
+              <span
+                class="flex shrink-0 gap-1"
+                role="meter"
+                aria-valuemin="1"
+                aria-valuemax="5"
+                aria-valuenow={item.level}
+                aria-label={t(locale, 'skills.levelAria', { name: item.name, level: item.level })}
+              >
+                {[1, 2, 3, 4, 5].map((step) => (
+                  <span
+                    class:list={[
+                      'h-1.5 w-3.5 rounded-full',
+                      step <= item.level
+                        ? 'bg-[var(--color-accent-500)]'
+                        : 'bg-[var(--line)]',
+                    ]}
+                    aria-hidden="true"
+                  ></span>
+                ))}
+              </span>
+            </div>
+            {item.note && <p class="mt-0.5 text-xs text-[var(--fg-2)]">{item.note}</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>

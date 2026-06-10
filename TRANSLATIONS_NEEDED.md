@@ -54,3 +54,11 @@ done
 - **Visible "translation pending" banner** so visitors know what's going on and you know what's outstanding.
 - **Build-time validation** keeps the data shape consistent across locales — no half-translated frontmatter shipping.
 - **Per-route fallback** instead of per-page redirect means search-engine canonicals stay correct.
+
+## v3 additions (June 2026)
+
+- `src/content/legal/` — **fully translated** (terms + privacy in en/es/ca/ro).
+- `src/content/skills/` — item names are proper nouns, no translation needed;
+  category labels live in `src/i18n/*.json` under `skills.categories.*` (done).
+- `src/content/gallery/` — `title`/`alt` are single strings (EN). If the
+  gallery grows beyond a handful of images, consider per-locale alt fields.

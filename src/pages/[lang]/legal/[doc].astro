@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { Locale } from '@i18n/utils';
+import { LOCALES, t, formatDate, entryBySlug } from '@i18n/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  const docs = ['terms', 'privacy'] as const;
+  return LOCALES.flatMap((lang) => docs.map((doc) => ({ params: { lang, doc } })));
+}
+
+const { lang, doc } = Astro.params as { lang: Locale; doc: string };
+
+const all = await getCollection('legal');
+const { entry, isFallback } = entryBySlug(all, lang, doc);
+if (!entry) throw new Error(`Missing legal document: ${doc}`);
+
+const { Content } = await render(entry);
+---
+
+<BaseLayout locale={lang} title={entry.data.title} description={entry.data.summary}>
+  <article class="mx-auto max-w-3xl">
+    {isFallback && (
+      <p class="mb-6 rounded-md border border-[var(--color-warn)] bg-[var(--bg-2)] px-4 py-3 text-sm text-[var(--fg-2)]">
+        {t(lang, 'fallback.translationPending')}
+      </p>
+    )}
+
+    <header class="mb-8 border-b border-[var(--line)] pb-6">
+      <h1 class="text-3xl font-bold tracking-tight">{entry.data.title}</h1>
+      <p class="mt-2 text-sm text-[var(--fg-2)]">
+        {t(lang, 'legal.lastUpdated')}: {formatDate(lang, entry.data.lastUpdated)}
+      </p>
+    </header>
+
+    <div class="prose-portfolio">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

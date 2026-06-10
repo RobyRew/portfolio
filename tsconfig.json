@@ -24,7 +24,9 @@
       "@islands/*": ["src/islands/*"],
       "@layouts/*": ["src/layouts/*"],
       "@i18n/*": ["src/i18n/*"],
-      "@content/*": ["src/content/*"]
+      "@content/*": ["src/content/*"],
+      "@config/*": ["src/config/*"],
+      "@lib/*": ["src/lib/*"]
     }
   },
   "include": ["src/**/*", "astro.config.mjs", ".astro/types.d.ts"],

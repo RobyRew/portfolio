@@ -1,12 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
 import type { Locale } from '@i18n/utils';
-import { LOCALES, t, path, entriesForLocale, stripLocaleFromId } from '@i18n/utils';
+import { LOCALES, t } from '@i18n/utils';
+import { IDENTITY, SOCIALS, FEATURES } from '@config/site';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import SectionHeading from '@components/SectionHeading.astro';
-import ProjectCard from '@components/ProjectCard.astro';
-import JobCard from '@components/JobCard.astro';
-import { Icon } from 'astro-icon/components';
+import ProfileHeader from '@components/profile/ProfileHeader.astro';
+import ProfileCard from '@components/profile/ProfileCard.astro';
+import Tabs from '@components/profile/Tabs.astro';
+import ProjectsPanel from '@components/profile/ProjectsPanel.astro';
+import ResumePanel from '@components/profile/ResumePanel.astro';
+import SkillsPanel from '@components/profile/SkillsPanel.astro';
+import GalleryPanel from '@components/profile/GalleryPanel.astro';
+import Lightbox from '@components/Lightbox.astro';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -14,82 +18,43 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params as { lang: Locale };
 
-const allProjects = await getCollection('projects');
-const allJobs = await getCollection('jobs');
+const tabs = [
+  { id: 'projects', label: t(lang, 'tabs.projects'), icon: 'lucide:layout-grid' },
+  { id: 'resume', label: t(lang, 'tabs.resume'), icon: 'lucide:file-text' },
+  { id: 'skills', label: t(lang, 'tabs.skills'), icon: 'lucide:users' },
+  ...(FEATURES.gallery
+    ? [{ id: 'gallery', label: t(lang, 'tabs.gallery'), icon: 'lucide:image' }]
+    : []),
+];
 
-const projects = entriesForLocale(allProjects, lang)
-  .filter((p) => p.data.featured)
-  .sort((a, b) => a.data.order - b.data.order);
-
-const currentJob = entriesForLocale(allJobs, lang)
-  .find((j) => j.data.current);
+// JSON-LD Person — machine-readable profile for search engines.
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: IDENTITY.name,
+  jobTitle: IDENTITY.jobTitle,
+  worksFor: { '@type': 'Organization', name: IDENTITY.employer },
+  email: `mailto:${IDENTITY.email}`,
+  url: Astro.site?.toString(),
+  sameAs: SOCIALS.filter((s) => s.url.startsWith('http')).map((s) => s.url),
+});
 ---
 
 <BaseLayout locale={lang}>
-  <!-- ── Hero ─────────────────────────────────────────────────────── -->
-  <section class="mb-16 sm:mb-24">
-    <p class="font-mono text-sm text-[var(--color-accent-600)] dark:text-[var(--color-accent-400)]">
-      {t(lang, 'hero.intro')}
-    </p>
-    <h1 class="mt-2 text-4xl font-bold tracking-tight sm:text-6xl">
-      Cosmin Calin
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-2)] sm:text-xl">
-      {t(lang, 'hero.role')}
-    </p>
-    <p class="mt-3 max-w-2xl text-base text-[var(--fg-2)]">
-      {t(lang, 'hero.summary')}
-    </p>
+  <ProfileHeader slot="hero" locale={lang} />
 
-    <div class="mt-6 flex flex-wrap gap-3">
-      <a
-        href={path(lang, 'projects')}
-        data-cmd data-cmd-label={t(lang, 'nav.projects')} data-cmd-group="navigate"
-        class="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent-500)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-600)]"
-      >
-        {t(lang, 'hero.ctaPrimary')}
-        <Icon name="lucide:arrow-right" class="h-4 w-4" />
-      </a>
-      <a
-        href={path(lang, 'about')}
-        data-cmd data-cmd-label={t(lang, 'nav.about')} data-cmd-group="navigate"
-        class="inline-flex items-center gap-2 rounded-md border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--fg)] transition-colors hover:border-[var(--color-accent-500)]"
-      >
-        {t(lang, 'hero.ctaSecondary')}
-      </a>
-    </div>
-  </section>
+  <script type="application/ld+json" set:html={jsonLd} is:inline />
 
-  <!-- ── Current role ─────────────────────────────────────────────── -->
-  {currentJob && (
-    <section class="mb-16 sm:mb-24">
-      <SectionHeading eyebrow="01" title={t(lang, 'sections.currentRole')} />
-      <JobCard entry={currentJob} locale={lang} />
-    </section>
-  )}
+  <div class="space-y-8">
+    <ProfileCard locale={lang} />
 
-  <!-- ── Featured projects ────────────────────────────────────────── -->
-  <section class="mb-16 sm:mb-24">
-    <SectionHeading eyebrow="02" title={t(lang, 'sections.featuredProjects')} />
-    <div class="grid gap-4 sm:grid-cols-2">
-      {projects.map((p) => (
-        <a
-          href={path(lang, 'projects', stripLocaleFromId(p.id))}
-          data-cmd data-cmd-label={p.data.title} data-cmd-group="project"
-          class="contents"
-        >
-          <ProjectCard entry={p} locale={lang} />
-        </a>
-      ))}
-    </div>
-    <p class="mt-6">
-      <a
-        href={path(lang, 'projects')}
-        class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--link)] hover:underline"
-      >
-        {t(lang, 'sections.otherProjects')}
-        <Icon name="lucide:arrow-right" class="h-4 w-4" />
-      </a>
-    </p>
-  </section>
+    <Tabs tabs={tabs} ariaLabel={t(lang, 'tabs.ariaLabel')}>
+      <ProjectsPanel slot="projects" locale={lang} />
+      <ResumePanel slot="resume" locale={lang} />
+      <SkillsPanel slot="skills" locale={lang} />
+      {FEATURES.gallery && <GalleryPanel slot="gallery" locale={lang} />}
+    </Tabs>
+  </div>
+
+  <Lightbox locale={lang} />
 </BaseLayout>

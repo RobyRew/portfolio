@@ -34,7 +34,7 @@ const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 ---
 
 <!doctype html>
-<html lang={localeIntl(locale)} data-theme="light" class="theme-loading">
+<html lang={localeIntl(locale)} data-theme="light" data-accent="mint" class="theme-loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -69,7 +69,7 @@ const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- No-flash theme: apply stored / system theme BEFORE paint -->
+    <!-- No-flash theme + accent: apply stored prefs BEFORE paint -->
     <script is:inline>
       (function () {
         try {
@@ -77,10 +77,15 @@ const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           const theme = stored || (prefersDark ? 'dark' : 'light');
           document.documentElement.setAttribute('data-theme', theme);
+          const accent = localStorage.getItem('accent');
+          if (accent && ['mint', 'blue', 'violet', 'amber'].includes(accent)) {
+            document.documentElement.setAttribute('data-accent', accent);
+          }
         } catch (_) {
-          // localStorage may be blocked — fall through to default light.
+          // localStorage may be blocked — fall through to defaults.
         } finally {
           document.documentElement.classList.remove('theme-loading');
+          document.documentElement.classList.add('js');
         }
       })();
     </script>
@@ -97,6 +102,9 @@ const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
     </a>
 
     <Header locale={locale} currentPath={Astro.url.pathname} />
+
+    <!-- Full-bleed area (profile cover) — rendered outside the constrained main. -->
+    <slot name="hero" />
 
     <main id="main" class="flex-1 safe-area-x mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <slot />

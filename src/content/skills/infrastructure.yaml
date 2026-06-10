@@ -1,0 +1,20 @@
+icon: lucide:boxes
+order: 20
+items:
+  - name: Ansible
+    level: 4
+    icon: simple-icons:ansible
+    note: Full VPS lifecycle as code — base, roles, deploys
+  - name: Docker / Compose
+    level: 5
+    icon: simple-icons:docker
+  - name: Dokploy
+    level: 4
+    note: Self-hosted PaaS for all personal apps
+  - name: Traefik / nginx
+    level: 4
+    icon: simple-icons:nginx
+    note: TLS, routing, security headers, CSP
+  - name: Restic + Backblaze B2
+    level: 4
+    note: Encrypted offsite backups with verified restores

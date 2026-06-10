@@ -1,0 +1,124 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Locale } from '@i18n/utils';
+import { t } from '@i18n/utils';
+
+/**
+ * Single shared lightbox <dialog> for the whole page.
+ *
+ * Any element carrying `data-lightbox` opens it:
+ *   data-full     — URL of the full-size image (required)
+ *   data-alt      — alt text for the enlarged image
+ *   data-caption  — optional caption line
+ *   data-group    — optional group id; triggers sharing a group get ‹ › nav
+ *
+ * Native <dialog> gives us focus trapping, Esc-to-close and an inert page
+ * for free — no JS framework needed.
+ */
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<dialog class="lightbox" data-lightbox-dialog aria-label={t(locale, 'gallery.dialogAria')}>
+  <figure class="relative m-0">
+    <img
+      data-lightbox-img
+      src=""
+      alt=""
+      class="mx-auto max-h-[85vh] w-auto max-w-full rounded-lg object-contain"
+    />
+    <figcaption data-lightbox-caption class="mt-3 text-center text-sm text-white/85"></figcaption>
+
+    <button
+      type="button"
+      data-lightbox-close
+      aria-label={t(locale, 'gallery.close')}
+      class="absolute -right-2 -top-2 grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-white text-gray-900 shadow-md transition-transform hover:scale-105"
+    >
+      <Icon name="lucide:x" class="h-5 w-5" aria-hidden="true" />
+    </button>
+
+    <button
+      type="button"
+      data-lightbox-prev
+      aria-label={t(locale, 'gallery.prev')}
+      class="absolute left-2 top-1/2 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+    >
+      <Icon name="lucide:chevron-left" class="h-6 w-6" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      data-lightbox-next
+      aria-label={t(locale, 'gallery.next')}
+      class="absolute right-2 top-1/2 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+    >
+      <Icon name="lucide:chevron-right" class="h-6 w-6" aria-hidden="true" />
+    </button>
+  </figure>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+
+  if (dialog) {
+    const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const prevBtn = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const nextBtn = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+
+    const triggers = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
+    let group: HTMLElement[] = [];
+    let index = 0;
+
+    function show(trigger: HTMLElement): void {
+      img.src = trigger.dataset.full ?? '';
+      img.alt = trigger.dataset.alt ?? '';
+      const text = trigger.dataset.caption ?? '';
+      caption.textContent = text;
+      caption.style.display = text ? '' : 'none';
+      const hasNav = group.length > 1;
+      prevBtn.style.display = hasNav ? '' : 'none';
+      nextBtn.style.display = hasNav ? '' : 'none';
+    }
+
+    function open(trigger: HTMLElement): void {
+      const groupId = trigger.dataset.group;
+      group = groupId ? triggers.filter((el) => el.dataset.group === groupId) : [trigger];
+      index = Math.max(0, group.indexOf(trigger));
+      show(trigger);
+      if (dialog && !dialog.open) dialog.showModal();
+    }
+
+    function step(delta: number): void {
+      if (group.length < 2) return;
+      index = (index + delta + group.length) % group.length;
+      const next = group[index];
+      if (next) show(next);
+    }
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => open(trigger));
+    });
+
+    prevBtn.addEventListener('click', () => step(-1));
+    nextBtn.addEventListener('click', () => step(1));
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') step(-1);
+      if (event.key === 'ArrowRight') step(1);
+    });
+
+    // Click on the backdrop (the dialog element itself) closes.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+
+    // Don't keep a heavy decoded image around while closed.
+    dialog.addEventListener('close', () => {
+      img.src = '';
+    });
+  }
+</script>

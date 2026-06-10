@@ -1,0 +1,16 @@
+icon: lucide:database
+order: 50
+items:
+  - name: SQLite / Drizzle ORM
+    level: 4
+    icon: simple-icons:sqlite
+  - name: Logto (self-hosted IdP)
+    level: 3
+    note: Central SSO for personal apps
+  - name: better-auth / passkeys
+    level: 3
+    note: WebAuthn flows in production (MapSwitch)
+  - name: Stripe
+    level: 3
+    icon: simple-icons:stripe
+    note: Donations pipeline for kingdomskids.org
