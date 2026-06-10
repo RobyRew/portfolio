@@ -9,7 +9,7 @@ const NAMES: Record<Locale, string> = {
   ca: 'Català',
   ro: 'Română',
 };
-const FLAGS: Record<Locale, string> = { en: '🇬🇧', es: '🇪🇸', ca: '🏴󠁥󠁳󠁣󠁴󠁿', ro: '🇷🇴' };
+const FLAGS: Record<Locale, string> = { en: '🇺🇸', es: '🇪🇸', ca: '🏴󠁥󠁳󠁣󠁴󠁿', ro: '🇷🇴' };
 
 export default function LocaleSwitcher({
   locale,
