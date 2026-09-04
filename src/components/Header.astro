@@ -42,11 +42,14 @@ const accentNames = {
 };
 ---
 
-<header class="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--bg)]/85 backdrop-blur-md no-print">
-  <div class="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:px-6 lg:px-8">
-    <a href={path(locale)} class="group flex items-center gap-2 font-bold tracking-tight">
-      <span class="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-accent-500)] text-white">cc</span>
-      <span class="hidden text-base text-[var(--fg)] sm:inline">Cosmin Calin</span>
+<!-- Floating pill rather than a full-width bar: Apple detaches the functional
+     layer from the edge so content passes underneath it, which is what makes the
+     material read as glass instead of a tinted strip. -->
+<div class="glass-float no-print">
+  <header class="rw-glass mx-auto flex max-w-5xl items-center gap-2 p-2" style="--r:999px">
+    <a href={path(locale)} class="group flex items-center gap-2 rounded-full py-1 pl-1 pr-3 font-bold tracking-tight">
+      <span class="grid h-7 w-7 place-items-center rounded-full bg-[var(--color-accent-500)] text-white">cc</span>
+      <span class="hidden text-base text-[var(--g-ink)] sm:inline">Cosmin Calin</span>
     </a>
 
     <nav class="ml-2 hidden flex-1 items-center gap-1 sm:flex">
@@ -56,7 +59,7 @@ const accentNames = {
           data-cmd
           data-cmd-label={t(locale, item.key)}
           data-cmd-group="navigate"
-          class="rounded-md px-3 py-1.5 text-sm text-[var(--fg-2)] transition-colors hover:bg-[var(--bg-2)] hover:text-[var(--fg)]"
+          class="rounded-full px-3 py-1.5 text-sm text-[var(--g-ink-dim)] transition-colors hover:bg-[rgb(var(--rim-rgb)/0.14)] hover:text-[var(--g-ink)]"
         >
           {t(locale, item.key)}
         </a>
@@ -89,11 +92,11 @@ const accentNames = {
       <details class="relative sm:hidden">
         <summary
           aria-label={dict.openMenu}
-          class="grid h-9 w-9 cursor-pointer place-items-center rounded-md text-[var(--fg-2)] hover:bg-[var(--bg-2)] hover:text-[var(--fg)] [&::-webkit-details-marker]:hidden"
+          class="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[var(--g-ink-dim)] hover:bg-[rgb(var(--rim-rgb)/0.14)] hover:text-[var(--g-ink)] [&::-webkit-details-marker]:hidden"
         >
           <Icon name="lucide:menu" class="h-5 w-5" />
         </summary>
-        <div class="absolute right-0 top-[calc(100%+0.5rem)] w-48 origin-top-right rounded-lg border border-[var(--line)] bg-[var(--bg)] p-1 shadow-lg">
+        <div class="absolute right-0 top-[calc(100%+0.75rem)] w-48 origin-top-right rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-1 shadow-lg">
           {nav.map((item) => (
             <a
               href={item.href}
@@ -105,8 +108,8 @@ const accentNames = {
         </div>
       </details>
     </div>
-  </div>
-</header>
+  </header>
+</div>
 
 <script>
   // Close the mobile <details> menu after choosing an entry — hash-only

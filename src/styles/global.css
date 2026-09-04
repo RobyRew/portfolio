@@ -3,6 +3,13 @@
 @import '@fontsource-variable/inter/index.css';
 @import '@fontsource-variable/jetbrains-mono/index.css';
 
+/* ── Liquid glass ─────────────────────────────────────────────────
+ * The material only: @robyrew/ui supplies .rw-glass, .rw-gl and the eleven
+ * --t-* properties. The bridge below maps it onto this site's existing tokens
+ * so the accent switcher and the [data-theme] bootstrap keep working unchanged.
+ */
+@import '@robyrew/ui/tokens.css';
+
 /* ── Tailwind v4 theme via CSS @theme directive ───────────────── */
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -259,3 +266,47 @@ dialog.lightbox::backdrop {
   background: oklch(0% 0 0 / 0.82);
   backdrop-filter: blur(4px);
 }
+
+
+/* ── Glass bridge ─────────────────────────────────────────────────
+ * Obsidian's structure is kept exactly — alpha, blur, saturation, rim and
+ * shadow are the values from the study. Only the material's BASE colour follows
+ * the theme, so the chrome stays legible on a light page.
+ *
+ * To pin it smoked in both themes (true Obsidian), delete the [data-theme='light']
+ * block below: the :root values already are the dark ones.
+ */
+:root {
+  --t-alpha: .52;
+  --t-blur: 30px;
+  --t-sat: 140%;
+  --t-rim: .30;
+  --t-sh-y: 16px;
+  --t-sh-blur: 38px;
+  --t-sh-a: .34;
+  --glass-rgb: 26 29 38;
+  --rim-rgb: 190 205 235;
+  --g-ink: #f4f6fb;
+  --g-ink-dim: #a4adc0;
+  --g-ink-mute: #737c8f;
+  --g-font: var(--font-sans);
+  --g-mono: var(--font-mono);
+}
+
+[data-theme='light'] {
+  --glass-rgb: 255 255 255;
+  --rim-rgb: 255 255 255;
+  --t-alpha: .62;
+  --t-rim: .70;
+  --t-sh-a: .12;
+  --g-ink: #14161c;
+  --g-ink-dim: #4d5464;
+  --g-ink-mute: #7c8394;
+}
+
+/* Glass samples what is behind it, so it needs somewhere to float. The page
+ * scrolls under the bar; this only keeps content from starting beneath it. */
+.glass-float { position: sticky; top: 0; z-index: 30; padding: .75rem 1rem 0; }
+@media (min-width: 640px) { .glass-float { padding: 1rem 1.5rem 0; } }
+
+@media print { .rw-glass { box-shadow: none; backdrop-filter: none; } }
