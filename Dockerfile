@@ -1,7 +1,10 @@
 # syntax=docker/dockerfile:1.10
 FROM node:22-alpine AS build
 WORKDIR /app
-RUN apk add --no-cache --virtual .build-deps libc6-compat python3 make g++
+# git is required at install time, not build time: @robyrew/ui is a `github:` tag
+# dependency and npm shells out to git to clone it. node:*-alpine ships without it.
+RUN apk add --no-cache git \
+ && apk add --no-cache --virtual .build-deps libc6-compat python3 make g++
 COPY package.json package-lock.json* ./
 ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
 ENV npm_config_arch=x64
