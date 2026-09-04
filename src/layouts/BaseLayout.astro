@@ -31,6 +31,9 @@ const alternates = alternateLinks(locale, Astro.url.pathname);
 // Use dot notation instead of brackets
 const umamiSrc = import.meta.env.PUBLIC_UMAMI_SCRIPT_URL;
 const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
+// Restricts reporting to this hostname. Without it a fork — or a preview
+// deploy, or localhost — would post into the same dashboard and corrupt it.
+const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS;
 ---
 
 <!doctype html>
@@ -92,7 +95,7 @@ const umamiId  = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 
     <!-- Umami analytics: cookie-less, GDPR-friendly, self-hosted. -->
     {umamiSrc && umamiId && (
-  <script is:inline defer src={umamiSrc} data-website-id={umamiId} data-do-not-track="true"></script>
+  <script is:inline defer src={umamiSrc} data-website-id={umamiId} data-domains={umamiDomains} data-do-not-track="true"></script>
 )}
   </head>
 

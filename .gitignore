@@ -15,6 +15,8 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+# Non-secret PUBLIC_* analytics config — see the file header.
+!.env.production
 
 # Editor / OS
 .DS_Store
