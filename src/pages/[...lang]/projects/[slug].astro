@@ -9,7 +9,8 @@ import { Icon } from 'astro-icon/components';
 export async function getStaticPaths() {
   const all = await getCollection('projects');
   const slugs = [...new Set(all.map((e) => stripLocaleFromId(e.id)))];
-  const paths: Array<{ params: { lang: Locale; slug: string } }> = [];
+  // lang is optional: the default locale has no URL segment, so its param is undefined.
+  const paths: Array<{ params: { lang: Locale | undefined; slug: string } }> = [];
   for (const lang of LOCALES) {
     for (const slug of slugs) {
       paths.push({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang, slug } });
