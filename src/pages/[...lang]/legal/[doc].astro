@@ -1,15 +1,16 @@
 ---
 import { getCollection, render } from 'astro:content';
 import type { Locale } from '@i18n/utils';
-import { LOCALES, t, formatDate, entryBySlug } from '@i18n/utils';
+import { DEFAULT_LOCALE, LOCALES, t, formatDate, entryBySlug } from '@i18n/utils';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
   const docs = ['terms', 'privacy'] as const;
-  return LOCALES.flatMap((lang) => docs.map((doc) => ({ params: { lang, doc } })));
+  return LOCALES.flatMap((lang) => docs.map((doc) => ({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang, doc } })));
 }
 
-const { lang, doc } = Astro.params as { lang: Locale; doc: string };
+const { doc } = Astro.params as { doc: string };
+const lang = (Astro.params.lang ?? DEFAULT_LOCALE) as Locale;
 
 const all = await getCollection('legal');
 const { entry, isFallback } = entryBySlug(all, lang, doc);

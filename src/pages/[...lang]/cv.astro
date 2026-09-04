@@ -1,14 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import type { Locale } from '@i18n/utils';
-import { LOCALES, t, entriesForLocale, formatDate } from '@i18n/utils';
+import { DEFAULT_LOCALE, LOCALES, t, entriesForLocale, formatDate } from '@i18n/utils';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
-  return LOCALES.map((lang) => ({ params: { lang } }));
+  return LOCALES.map((lang) => ({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang } }));
 }
 
-const { lang } = Astro.params as { lang: Locale };
+const lang = (Astro.params.lang ?? DEFAULT_LOCALE) as Locale;
 
 const jobs = entriesForLocale(await getCollection('jobs'), lang)
   .sort((a, b) => b.data.startDate.localeCompare(a.data.startDate));

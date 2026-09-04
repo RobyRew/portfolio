@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import type { Locale } from '@i18n/utils';
-import { LOCALES, t, path, entryBySlug, stripLocaleFromId } from '@i18n/utils';
+import { DEFAULT_LOCALE, LOCALES, t, path, entryBySlug, stripLocaleFromId } from '@i18n/utils';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import TechBadge from '@components/TechBadge.astro';
 import { Icon } from 'astro-icon/components';
@@ -12,13 +12,14 @@ export async function getStaticPaths() {
   const paths: Array<{ params: { lang: Locale; slug: string } }> = [];
   for (const lang of LOCALES) {
     for (const slug of slugs) {
-      paths.push({ params: { lang, slug } });
+      paths.push({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang, slug } });
     }
   }
   return paths;
 }
 
-const { lang, slug } = Astro.params as { lang: Locale; slug: string };
+const { slug } = Astro.params as { slug: string };
+const lang = (Astro.params.lang ?? DEFAULT_LOCALE) as Locale;
 const all = await getCollection('projects');
 const { entry, isFallback } = entryBySlug(all, lang, slug);
 

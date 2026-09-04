@@ -21,7 +21,12 @@ export default defineConfig({
     locales: ['en', 'es', 'ca', 'ro'],
     defaultLocale: 'en',
     routing: {
-      prefixDefaultLocale: true,
+      // The default locale carries no URL prefix: cosmincalin.es/ not /en/.
+      // Routes come from a [...lang] rest param whose value is undefined for the
+      // default locale, which is what actually drops the segment — this flag
+      // alone does not, because [lang] is a required param and Astro rejects an
+      // undefined value for one.
+      prefixDefaultLocale: false,
       redirectToDefaultLocale: false,
     },
     // No `fallback` — every page lives under `src/pages/[lang]/` and its

@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@i18n/utils';
-import { LOCALES, t } from '@i18n/utils';
+import { DEFAULT_LOCALE, LOCALES, t } from '@i18n/utils';
 import { IDENTITY, SOCIALS, FEATURES } from '@config/site';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProfileHeader from '@components/profile/ProfileHeader.astro';
@@ -13,10 +13,10 @@ import GalleryPanel from '@components/profile/GalleryPanel.astro';
 import Lightbox from '@components/Lightbox.astro';
 
 export function getStaticPaths() {
-  return LOCALES.map((lang) => ({ params: { lang } }));
+  return LOCALES.map((lang) => ({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang } }));
 }
 
-const { lang } = Astro.params as { lang: Locale };
+const lang = (Astro.params.lang ?? DEFAULT_LOCALE) as Locale;
 
 const tabs = [
   { id: 'projects', label: t(lang, 'tabs.projects'), icon: 'lucide:layout-grid' },

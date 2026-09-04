@@ -55,7 +55,12 @@ export function path(locale: Locale, ...segments: string[]): string {
     .flatMap((s) => s.split('/'))
     .filter(Boolean)
     .join('/');
-  return `/${locale}${clean ? `/${clean}` : ''}`;
+  // The default locale carries no prefix: cosmincalin.es/ not /en/. Other
+  // locales keep theirs. Changing this alone is not enough — the routes are
+  // generated from a [...lang] rest param whose value is undefined for the
+  // default locale.
+  const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
+  return `${prefix}${clean ? `/${clean}` : ''}` || '/';
 }
 
 /** Strip the locale prefix from a URL. */
@@ -120,8 +125,11 @@ export function localeIntl(locale: Locale): string {
 /** All locale-pair variants of a given page, for hreflang tags + locale switcher. */
 export function alternateLinks(_currentLocale: Locale, currentPath: string): Array<{ locale: Locale; href: string }> {
   const stripped = stripLocale(currentPath);
+  // Built through path() so the default locale gets no prefix. Emitting
+  // `/en/...` here would advertise hreflang targets that do not exist: those
+  // routes are no longer generated.
   return LOCALES.map((loc) => ({
     locale: loc,
-    href: `/${loc}${stripped === '/' ? '' : stripped}`,
+    href: path(loc, stripped === '/' ? '' : stripped),
   }));
 }

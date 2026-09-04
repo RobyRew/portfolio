@@ -1,0 +1,12 @@
+---
+import type { Locale } from '@i18n/utils';
+import { DEFAULT_LOCALE, LOCALES, path } from '@i18n/utils';
+import Redirect from '@components/Redirect.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang: lang === DEFAULT_LOCALE ? undefined : lang } }));
+}
+const lang = (Astro.params.lang ?? DEFAULT_LOCALE) as Locale;
+---
+
+<Redirect to={`${path(lang)}#resume`} />

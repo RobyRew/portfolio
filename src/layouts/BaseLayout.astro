@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@i18n/utils';
-import { t, alternateLinks, LOCALES, localeIntl } from '@i18n/utils';
+import { DEFAULT_LOCALE, path, t, alternateLinks, LOCALES, localeIntl } from '@i18n/utils';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import '@/styles/global.css';
@@ -54,7 +54,7 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS;
     {alternates.map(({ locale: loc, href }) => (
       <link rel="alternate" hreflang={loc} href={new URL(href, Astro.site).toString()} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={new URL('/en/', Astro.site).toString()} />
+    <link rel="alternate" hreflang="x-default" href={new URL(path(DEFAULT_LOCALE), Astro.site).toString()} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
