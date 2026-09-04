@@ -1,10 +1,5 @@
-# Builds the container image on GitHub's runners and pushes it to GHCR, then asks
-# Dokploy to pull it.
-#
-# Dokploy previously built this image on the VPS itself. That box has 2 GB of RAM
-# and 2 cores, runs Logto, the family's DNS resolver and the backups, and its
-# Docker build cache reached 3.07 GB in a single day of deploys — capacity spent
-# on building rather than serving.
+# Build definition lives in RobyRew/platform so it is maintained once for the
+# whole fleet. This repo only says WHEN to build and which secret to pass.
 name: Build and publish image
 
 on:
@@ -13,58 +8,8 @@ on:
     paths-ignore: ['**.md', 'docs/**', '.vscode/**']
   workflow_dispatch:
 
-permissions:
-  contents: read
-  packages: write          # GITHUB_TOKEN pushes to GHCR; no PAT is stored anywhere
-
-concurrency:
-  group: build-image-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # IMAGE_NAME is lowercased because GHCR rejects uppercase path segments and
-      # the owner is "RobyRew".
-      - name: Compute image name
-        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
-
-      - uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ github.sha }}
-          # Runner-side layer cache, so the VPS keeps none of it.
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Dokploy's autoDeploy reacts to a webhook. The deploy must happen after the
-      # push above, otherwise Dokploy pulls the previous :latest.
-      - name: Ask Dokploy to pull the new image
-        if: github.event_name == 'push'
-        env:
-          HOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
-        run: |
-          if [ -z "$HOOK" ]; then
-            echo "DOKPLOY_DEPLOY_WEBHOOK is not set — image pushed, deploy not requested." >&2
-            exit 1
-          fi
-          # A bare POST is answered with 301 rather than a deploy; the handler
-          # expects a push-shaped body.
-          curl -fsS -X POST "$HOOK" \
-            -H 'Content-Type: application/json' \
-            -H 'X-GitHub-Event: push' \
-            -d '{"ref":"${{ github.ref }}"}'
+    uses: RobyRew/platform/.github/workflows/build-image.yml@main
+    secrets:
+      DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
