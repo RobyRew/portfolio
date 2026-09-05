@@ -11,8 +11,12 @@
  * The bridge below maps both onto this site's existing tokens so the accent
  * switcher and the [data-theme] bootstrap keep working unchanged.
  */
-@import '@robyrew/ui/tokens.css';
-@import '@robyrew/ui/controls.css';
+/* Imported into Tailwind's `components` layer so a utility beats a .rw- class:
+ * .rw-glass sets `position: relative` for its rim pseudo-element, and unlayered
+ * that overrides a `fixed`/`absolute` utility on the same element. It also means
+ * the bridge below wins on layer order rather than on specificity. */
+@import '@robyrew/ui/tokens.css' layer(components);
+@import '@robyrew/ui/controls.css' layer(components);
 
 /* ── Tailwind v4 theme via CSS @theme directive ───────────────── */
 @theme {
@@ -308,12 +312,15 @@ dialog.lightbox::backdrop {
  *
  * One block for every theme state, because the aliases resolve through: when
  * [data-theme='dark'] re-points --bg and --fg, the controls follow with no
- * second block. But the selector has to be able to WIN — tokens.css themes at
- * :root[data-theme="light"] and :root:not([data-theme="dark"]), both (0,2,0),
- * so a plain :root here (0,1,0) loses and the package's own palette stays in
- * force: cards take Obsidian's hairline and, worse, --accent stays Obsidian
- * blue so the accent switcher drives nothing below the glass layer. The pair
- * below matches every state at (0,2,0) and comes later in source order. */
+ * second block.
+ *
+ * The selector pair is what makes it win. It was needed because tokens.css
+ * themes at :root[data-theme="light"], which is (0,2,0), and a plain :root
+ * here (0,1,0) lost — leaving --accent as Obsidian blue, so the accent
+ * switcher drove nothing below the glass layer. The layer(components) import
+ * above now settles that on layer order instead, but the pair is kept: it
+ * still reads as "every theme state", and it does not depend on the import
+ * form staying layered. */
 :root:not([data-theme]),
 :root[data-theme] {
   --panel:       var(--bg);
