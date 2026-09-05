@@ -1,0 +1,130 @@
+---
+import GlassMenu from './GlassMenu.astro';
+import { ACCENTS, type Accent } from '@config/site';
+
+interface Props {
+  labels: { toggle: string; light: string; dark: string; system: string;
+            accent: string; accents: Record<Accent, string> };
+}
+const { labels } = Astro.props;
+
+// Mirrors --color-accent-500 per palette, so a swatch shows its own palette
+// rather than whichever accent happens to be active.
+const SWATCH: Record<Accent, string> = {
+  mint:   'oklch(60% 0.20 150)',
+  blue:   'oklch(60% 0.17 248)',
+  violet: 'oklch(60% 0.20 302)',
+  amber:  'oklch(68% 0.15 65)',
+};
+const THEMES = [
+  { v: 'light',  glyph: '☀', key: 'light'  },
+  { v: 'dark',   glyph: '☾', key: 'dark'   },
+  { v: 'system', glyph: '◐', key: 'system' },
+] as const;
+---
+<GlassMenu label={labels.toggle} width="13.5rem" class="am">
+  <span slot="trigger" class="am__trigger" aria-hidden="true">◐</span>
+
+  <div class="am__section">
+    <span class="am__title">{labels.toggle}</span>
+    <div class="am__seg" role="group" aria-label={labels.toggle}>
+      {THEMES.map((t) => (
+        <button type="button" class="am__segbtn" data-theme-set={t.v} aria-pressed="false">
+          <span class="am__glyph" aria-hidden="true">{t.glyph}</span>
+          <span>{labels[t.key]}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="am__section">
+    <span class="am__title">{labels.accent}</span>
+    <div class="am__swatches" role="group" aria-label={labels.accent}>
+      {ACCENTS.map((a) => (
+        <button type="button" class="am__swatch" data-accent-set={a}
+                aria-pressed="false" aria-label={labels.accents[a]} title={labels.accents[a]}>
+          <span style={`background:${SWATCH[a]}`}></span>
+        </button>
+      ))}
+    </div>
+  </div>
+</GlassMenu>
+
+<style>
+  .am__trigger { font-size: 1rem; line-height: 1; }
+  .am__section { padding: .45rem .5rem .55rem; }
+  .am__section + .am__section { border-top: 1px solid var(--line); }
+  .am__title {
+    display: block; margin-bottom: .45rem; padding-inline: .15rem;
+    font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--fg-2);
+  }
+  /* Segmented control, iOS style: one recessed track, the active pill raised. */
+  .am__seg { display: flex; gap: .15rem; padding: .2rem; background: var(--bg-2); border-radius: .7rem; }
+  .am__segbtn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: .2rem;
+    padding: .4rem .2rem; border: 0; border-radius: .55rem; cursor: pointer;
+    font: inherit; font-size: .62rem; font-weight: 600; color: var(--fg-2);
+    background: transparent; transition: background .16s, color .16s;
+  }
+  .am__segbtn:hover { color: var(--fg); }
+  .am__segbtn[aria-pressed='true'] {
+    color: var(--fg); background: var(--bg);
+    box-shadow: 0 1px 2px rgb(0 0 0 / .12), 0 0 0 1px var(--line);
+  }
+  .am__segbtn:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 1px; }
+  .am__glyph { font-size: .95rem; line-height: 1; }
+
+  .am__swatches { display: flex; gap: .4rem; padding-inline: .15rem; }
+  .am__swatch {
+    width: 1.7rem; height: 1.7rem; padding: .18rem; border: 0; border-radius: 999px;
+    cursor: pointer; background: transparent; transition: transform .16s, box-shadow .16s;
+  }
+  .am__swatch span { display: block; width: 100%; height: 100%; border-radius: 999px; }
+  .am__swatch:hover { transform: scale(1.08); }
+  .am__swatch[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--color-accent-500); }
+  .am__swatch:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .am__segbtn, .am__swatch { transition: none; } }
+</style>
+
+<script>
+  type Theme = 'light' | 'dark' | 'system';
+
+  function applyTheme(t: Theme) {
+    const dark = t === 'dark' ||
+      (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }
+
+  function sync() {
+    const theme = (localStorage.getItem('theme') as Theme | null) ?? 'system';
+    const accent = localStorage.getItem('accent');
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-set]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.themeSet === theme)));
+    document.querySelectorAll<HTMLButtonElement>('[data-accent-set]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.accentSet === accent)));
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = (e.target as Element).closest<HTMLButtonElement>('[data-theme-set]');
+    if (t) {
+      const v = t.dataset.themeSet as Theme;
+      // 'system' is the absence of a preference, not a third stored value.
+      if (v === 'system') localStorage.removeItem('theme'); else localStorage.setItem('theme', v);
+      applyTheme(v); sync(); return;
+    }
+    const a = (e.target as Element).closest<HTMLButtonElement>('[data-accent-set]');
+    if (a) {
+      localStorage.setItem('accent', a.dataset.accentSet!);
+      document.documentElement.setAttribute('data-accent', a.dataset.accentSet!);
+      sync();
+    }
+  });
+
+  // Follow the OS while the user has expressed no preference.
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (!localStorage.getItem('theme')) applyTheme('system');
+  });
+
+  sync();
+</script>

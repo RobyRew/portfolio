@@ -1,0 +1,73 @@
+---
+/** Apple segmented-control filter. The grid stays the source of truth in the
+ *  DOM, so the full list renders without JavaScript and the script only hides.
+ *  Replaces a React island that did the same DOM work behind a runtime. */
+interface Props { techs: string[]; showAllLabel: string; filterLabel: string }
+const { techs, showAllLabel, filterLabel } = Astro.props;
+const sorted = [...new Set(techs)].sort((a, b) => a.localeCompare(b));
+---
+<div class="pf" data-project-filter>
+  <span class="pf__label">{filterLabel}</span>
+  <div class="pf__track" role="group" aria-label={filterLabel}>
+    <button type="button" class="pf__chip is-active" data-tech="" aria-pressed="true">{showAllLabel}</button>
+    {sorted.map((tech) => (
+      <button type="button" class="pf__chip pf__chip--mono" data-tech={tech} aria-pressed="false">{tech}</button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .pf { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1.4rem; }
+  .pf__label {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--fg-2);
+  }
+  /* One recessed track holding capsule chips — the iOS segmented control. */
+  .pf__track {
+    display: flex; flex-wrap: wrap; gap: .25rem; padding: .25rem;
+    background: var(--bg-2); border-radius: 999px;
+  }
+  .pf__chip {
+    border: 0; cursor: pointer; font: inherit; font-size: .72rem; font-weight: 600;
+    padding: .34rem .7rem; border-radius: 999px; color: var(--fg-2);
+    background: transparent; transition: background .16s, color .16s, transform .16s;
+  }
+  .pf__chip--mono { font-family: var(--font-mono); font-weight: 500; }
+  .pf__chip:hover { color: var(--fg); }
+  .pf__chip:active { transform: scale(.96); }
+  .pf__chip.is-active {
+    color: var(--fg); background: var(--bg);
+    box-shadow: 0 1px 2px rgb(0 0 0 / .12), 0 0 0 1px var(--line);
+  }
+  .pf__chip:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .pf__chip { transition: none; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-project-filter]');
+  if (root) {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.pf__chip')];
+
+    function apply(tech: string, push = true) {
+      document.querySelectorAll<HTMLElement>('[data-tech]').forEach((card) => {
+        if (card.classList.contains('pf__chip')) return;
+        const list = (card.dataset.tech ?? '').split('|');
+        card.hidden = tech !== '' && !list.includes(tech);
+      });
+      chips.forEach((c) => {
+        const on = (c.dataset.tech ?? '') === tech;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      if (push) {
+        const url = new URL(location.href);
+        if (tech) url.searchParams.set('tech', tech); else url.searchParams.delete('tech');
+        history.replaceState(null, '', url);
+      }
+    }
+
+    chips.forEach((c) => c.addEventListener('click', () => apply(c.dataset.tech ?? '')));
+    // Deep links like ?tech=Astro keep working.
+    apply(new URL(location.href).searchParams.get('tech') ?? '', false);
+  }
+</script>

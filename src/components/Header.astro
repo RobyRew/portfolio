@@ -3,9 +3,9 @@ import type { Locale } from '@i18n/utils';
 import { t, path, alternateLinks } from '@i18n/utils';
 import { Icon } from 'astro-icon/components';
 import { FEATURES } from '@config/site';
-import AppearanceMenu from '@islands/AppearanceMenu';
-import LocaleSwitcher from '@islands/LocaleSwitcher';
-import CommandPalette from '@islands/CommandPalette';
+import AppearanceMenu from '@components/ui/AppearanceMenu.astro';
+import LocaleMenu from '@components/ui/LocaleMenu.astro';
+import CommandPalette from '@components/ui/CommandPalette.astro';
 
 export interface Props {
   locale: Locale;
@@ -67,17 +67,9 @@ const accentNames = {
     </nav>
 
     <div class="ml-auto flex items-center gap-1">
-      {FEATURES.commandPalette && (
-        <CommandPalette client:idle locale={locale} triggerLabel={dict.commandPalette} />
-      )}
-      <LocaleSwitcher
-        client:idle
-        locale={locale}
-        alternates={localeAlternates}
-        label={dict.switchLanguage}
-      />
+      {FEATURES.commandPalette && <CommandPalette triggerLabel={dict.commandPalette} />}
+      <LocaleMenu locale={locale} alternates={localeAlternates} label={dict.switchLanguage} />
       <AppearanceMenu
-        client:idle
         labels={{
           toggle: dict.switchTheme,
           light: dict.themeLight,
@@ -89,7 +81,7 @@ const accentNames = {
       />
 
       <!-- Mobile menu — uses a <details> for zero-JS fallback -->
-      <details class="relative sm:hidden">
+      <details class="relative sm:hidden" data-menu>
         <summary
           aria-label={dict.openMenu}
           class="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[var(--g-ink-dim)] hover:bg-[rgb(var(--rim-rgb)/0.14)] hover:text-[var(--g-ink)] [&::-webkit-details-marker]:hidden"
@@ -112,6 +104,9 @@ const accentNames = {
 </div>
 
 <script>
+  // Light-dismiss, Escape and single-open behaviour for every <details data-menu>.
+  import '@/scripts/menus';
+
   // Close the mobile <details> menu after choosing an entry — hash-only
   // navigation does not reload the page, so it would otherwise stay open.
   document.querySelectorAll<HTMLDetailsElement>('header details').forEach((details) => {

@@ -1,0 +1,27 @@
+---
+import type { Locale } from '@i18n/utils';
+import GlassMenu from './GlassMenu.astro';
+import MenuItem from './MenuItem.astro';
+
+interface Props { locale: Locale; alternates: { locale: Locale; href: string }[]; label: string }
+const { locale, alternates, label } = Astro.props;
+
+const NAMES: Record<Locale, string> = { en: 'English', es: 'Español', ca: 'Català', ro: 'Română' };
+const FLAGS: Record<Locale, string> = { en: '🇺🇸', es: '🇪🇸', ca: '🏴󠁥󠁳󠁣󠁴󠁿', ro: '🇷🇴' };
+---
+<GlassMenu label={label} width="11rem">
+  <span slot="trigger" class="lm__trigger">
+    <span aria-hidden="true">{FLAGS[locale]}</span>
+    <span class="lm__code">{locale}</span>
+  </span>
+  {alternates.map(({ locale: loc, href }) => (
+    <MenuItem href={href} hreflang={loc} current={loc === locale} glyph={FLAGS[loc]}>
+      {NAMES[loc]}
+    </MenuItem>
+  ))}
+</GlassMenu>
+
+<style>
+  .lm__trigger { display: flex; align-items: center; gap: .3rem; }
+  .lm__code { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; }
+</style>

@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
@@ -14,9 +13,8 @@ export default defineConfig({
   compressHTML: true,
 
   // ── Locale routing ────────────────────────────────────────────────
-  // Four locales. EN is the default and is served from /en/ to keep
-  // URLs symmetric (cosmincalin.es/en/projects, .es/es/proyectos, …).
-  // The root / redirects to /en/ via a tiny meta-refresh page.
+  // Four locales. EN is the default and is served from the root with no
+  // prefix; es/ca/ro keep theirs. Retired /en/* URLs are not emitted.
   i18n: {
     locales: ['en', 'es', 'ca', 'ro'],
     defaultLocale: 'en',
@@ -38,7 +36,6 @@ export default defineConfig({
 
   // ── Integrations ──────────────────────────────────────────────────
   integrations: [
-    react(),
     sitemap({
       // Retired routes are 301-stubs (see nginx.conf) — keep them out of the sitemap.
       filter: (page) => !/\/(about|contact|experience|projects)\/$/.test(page),

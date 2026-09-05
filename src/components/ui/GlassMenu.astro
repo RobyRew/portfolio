@@ -1,0 +1,41 @@
+---
+/** Apple-style popover menu on a <details>, so open/close needs no JavaScript.
+ *  A shared 12-line script adds light-dismiss and Escape — the only two things
+ *  <details> does not give for free. Replaces a React island that shipped a
+ *  runtime to do the same thing. */
+interface Props { label: string; align?: 'left' | 'right'; width?: string; class?: string }
+const { label, align = 'right', width = '11rem', class: cls = '' } = Astro.props;
+---
+<details class:list={['gm', cls]} data-menu>
+  <summary aria-label={label} aria-haspopup="menu"><slot name="trigger" /></summary>
+  <div class="gm__pop" role="menu" data-align={align} style={`--w:${width}`}>
+    <slot />
+  </div>
+</details>
+
+<style>
+  .gm { position: relative; }
+  .gm > summary {
+    display: grid; place-items: center; height: 2.25rem; min-width: 2.25rem; padding: 0 .5rem;
+    border-radius: 999px; cursor: pointer; list-style: none;
+    color: var(--g-ink-dim); transition: color .18s, background .18s;
+  }
+  .gm > summary::-webkit-details-marker { display: none; }
+  .gm > summary:hover { color: var(--g-ink); background: rgb(var(--rim-rgb) / .14); }
+  .gm[open] > summary { color: var(--g-ink); background: rgb(var(--rim-rgb) / .18); }
+  .gm > summary:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
+
+  /* An opaque surface over the page, not more glass — glass on glass is the mistake. */
+  .gm__pop {
+    position: absolute; top: calc(100% + .6rem); z-index: 60; width: var(--w);
+    padding: .3rem; border-radius: 1rem;
+    background: var(--bg); border: 1px solid var(--line);
+    box-shadow: 0 12px 34px rgb(0 0 0 / .28), 0 2px 6px rgb(0 0 0 / .12);
+    transform-origin: top right;
+    animation: gmIn .16s cubic-bezier(.32,.72,0,1);
+  }
+  .gm__pop[data-align='left'] { left: 0; transform-origin: top left; }
+  .gm__pop[data-align='right'] { right: 0; }
+  @keyframes gmIn { from { opacity: 0; transform: scale(.94) translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) { .gm__pop { animation: none; } }
+</style>

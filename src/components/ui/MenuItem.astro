@@ -1,0 +1,34 @@
+---
+/** One row in a GlassMenu. Concentric: the popover is 1rem with .3rem padding,
+ *  so rows are .7rem. */
+interface Props { href?: string; hreflang?: string; current?: boolean; value?: string; glyph?: string }
+const { href, hreflang, current = false, value, glyph } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+<Tag
+  href={href}
+  hreflang={hreflang}
+  type={href ? undefined : 'button'}
+  data-value={value}
+  role="menuitem"
+  aria-current={current ? 'true' : undefined}
+  class:list={['mi', { 'is-current': current }]}
+>
+  {glyph && <span class="mi__glyph" aria-hidden="true">{glyph}</span>}
+  <span class="mi__label"><slot /></span>
+  {current && <span class="mi__tick" aria-hidden="true">✓</span>}
+</Tag>
+
+<style>
+  .mi {
+    display: flex; align-items: center; gap: .55rem; width: 100%;
+    padding: .5rem .65rem; border-radius: .7rem; border: 0; background: none;
+    font: inherit; font-size: .82rem; text-align: left; text-decoration: none; cursor: pointer;
+    color: var(--fg-2); transition: background .14s, color .14s;
+  }
+  .mi:hover { background: var(--bg-2); color: var(--fg); }
+  .mi:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: -2px; }
+  .mi.is-current { color: var(--fg); background: var(--bg-2); }
+  .mi__glyph { font-size: .95rem; line-height: 1; }
+  .mi__tick { margin-left: auto; color: var(--color-accent-500); font-size: .8rem; }
+</style>

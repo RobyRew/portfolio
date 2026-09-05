@@ -4,8 +4,6 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "allowJs": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -21,7 +19,6 @@
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
-      "@islands/*": ["src/islands/*"],
       "@layouts/*": ["src/layouts/*"],
       "@i18n/*": ["src/i18n/*"],
       "@content/*": ["src/content/*"],
