@@ -194,21 +194,10 @@ body {
 .theme-loading { visibility: hidden; }
 
 /* ── Profile tabs (ARIA tablist; panels toggled by Tabs.astro script) ── */
-[role='tab'] {
-  color: var(--fg-2);
-  border-bottom: 2px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-[role='tab']:hover { color: var(--fg); }
-[role='tab'][aria-selected='true'] {
-  color: var(--color-accent-600);
-  border-bottom-color: var(--color-accent-500);
-}
-[data-theme='dark'] [role='tab'][aria-selected='true'] {
-  color: var(--color-accent-400);
-}
-/* No-JS fallback: every panel stays visible, stacked, with its name as a
-   heading (rendered by Tabs.astro inside <noscript>-friendly markup). */
+/* Tabs are styled as a segmented control inside TabBar.astro, which lives in
+   the glass bar; the old underlined row it replaced is gone.
+   No-JS fallback: every panel stays visible, stacked, with its name promoted
+   to a real heading (rules live inside <noscript> in TabPanels.astro). */
 html.js [role='tabpanel'][hidden] { display: none; }
 
 /* ── Hover tooltip (pure CSS, keyboard-accessible via :focus-within) ── */

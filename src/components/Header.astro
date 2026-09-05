@@ -52,34 +52,23 @@ const accentNames = {
       <span class="hidden text-base text-[var(--g-ink)] sm:inline">Cosmin Calin</span>
     </a>
 
-    <nav class="ml-2 hidden flex-1 items-center gap-1 sm:flex">
-      {nav.map((item) => (
-        <a
-          href={item.href}
-          data-cmd
-          data-cmd-label={t(locale, item.key)}
-          data-cmd-group="navigate"
-          class="rounded-full px-3 py-1.5 text-sm text-[var(--g-ink-dim)] transition-colors hover:bg-[rgb(var(--rim-rgb)/0.14)] hover:text-[var(--g-ink)]"
-        >
-          {t(locale, item.key)}
-        </a>
-      ))}
-    </nav>
-
-    <div class="ml-auto flex items-center gap-1">
-      {FEATURES.commandPalette && <CommandPalette triggerLabel={dict.commandPalette} />}
-      <LocaleMenu locale={locale} alternates={localeAlternates} label={dict.switchLanguage} />
-      <AppearanceMenu
-        labels={{
-          toggle: dict.switchTheme,
-          light: dict.themeLight,
-          dark: dict.themeDark,
-          system: dict.themeSystem,
-          accent: dict.accent,
-          accents: accentNames,
-        }}
-      />
-
+    <!-- The profile page slots its real tablist in here. Everywhere else the
+         same destinations render as plain links, which is what they are from a
+         subpage: navigation home to a hash. -->
+    <slot name="nav">
+      <nav class="ml-2 hidden flex-1 items-center gap-1 sm:flex">
+        {nav.map((item) => (
+          <a
+            href={item.href}
+            data-cmd
+            data-cmd-label={t(locale, item.key)}
+            data-cmd-group="navigate"
+            class="rounded-full px-3 py-1.5 text-sm text-[var(--g-ink-dim)] transition-colors hover:bg-[rgb(var(--rim-rgb)/0.14)] hover:text-[var(--g-ink)]"
+          >
+            {t(locale, item.key)}
+          </a>
+        ))}
+      </nav>
       <!-- Mobile menu — uses a <details> for zero-JS fallback -->
       <details class="relative sm:hidden" data-menu>
         <summary
@@ -99,6 +88,26 @@ const accentNames = {
           ))}
         </div>
       </details>
+    </slot>
+
+    <div class="ml-auto flex shrink-0 items-center gap-1">
+      {FEATURES.commandPalette && (
+        <div class="hidden sm:contents">
+          <CommandPalette triggerLabel={dict.commandPalette} />
+        </div>
+      )}
+      <LocaleMenu locale={locale} alternates={localeAlternates} label={dict.switchLanguage} />
+      <AppearanceMenu
+        labels={{
+          toggle: dict.switchTheme,
+          light: dict.themeLight,
+          dark: dict.themeDark,
+          system: dict.themeSystem,
+          accent: dict.accent,
+          accents: accentNames,
+        }}
+      />
+
     </div>
   </header>
 </div>

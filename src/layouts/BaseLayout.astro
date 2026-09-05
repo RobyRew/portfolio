@@ -104,7 +104,11 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS;
       {t(locale, 'actions.skipToContent')}
     </a>
 
-    <Header locale={locale} currentPath={Astro.url.pathname} />
+    <Header locale={locale} currentPath={Astro.url.pathname}>
+      <!-- Forwarded so a page can put its own control in the bar; the profile
+           page slots its tablist here. -->
+      <slot name="nav" slot="nav" />
+    </Header>
 
     <!-- Full-bleed area (profile cover) — rendered outside the constrained main. -->
     <slot name="hero" />

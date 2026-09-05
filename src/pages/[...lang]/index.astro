@@ -5,7 +5,8 @@ import { IDENTITY, SOCIALS, FEATURES } from '@config/site';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import ProfileHeader from '@components/profile/ProfileHeader.astro';
 import ProfileCard from '@components/profile/ProfileCard.astro';
-import Tabs from '@components/profile/Tabs.astro';
+import TabBar from '@components/ui/TabBar.astro';
+import TabPanels from '@components/profile/TabPanels.astro';
 import ProjectsPanel from '@components/profile/ProjectsPanel.astro';
 import ResumePanel from '@components/profile/ResumePanel.astro';
 import SkillsPanel from '@components/profile/SkillsPanel.astro';
@@ -41,6 +42,7 @@ const jsonLd = JSON.stringify({
 ---
 
 <BaseLayout locale={lang}>
+  <TabBar slot="nav" group="profile" tabs={tabs} ariaLabel={t(lang, 'tabs.ariaLabel')} />
   <ProfileHeader slot="hero" locale={lang} />
 
   <script type="application/ld+json" set:html={jsonLd} is:inline />
@@ -48,12 +50,12 @@ const jsonLd = JSON.stringify({
   <div class="space-y-8">
     <ProfileCard locale={lang} />
 
-    <Tabs tabs={tabs} ariaLabel={t(lang, 'tabs.ariaLabel')}>
+    <TabPanels tabs={tabs} group="profile">
       <ProjectsPanel slot="projects" locale={lang} />
       <ResumePanel slot="resume" locale={lang} />
       <SkillsPanel slot="skills" locale={lang} />
       {FEATURES.gallery && <GalleryPanel slot="gallery" locale={lang} />}
-    </Tabs>
+    </TabPanels>
   </div>
 
   <Lightbox locale={lang} />

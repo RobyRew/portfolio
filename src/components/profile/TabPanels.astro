@@ -1,0 +1,53 @@
+---
+/**
+ * The panels for a tab group. The tablist that drives them is rendered into
+ * the floating glass bar by TabBar.astro; `group` is what pairs the two.
+ *
+ * Panels are passed as named slots matching each tab id.
+ */
+export interface Props {
+  tabs: { id: string; label: string }[];
+  group: string;
+}
+const { tabs, group } = Astro.props;
+
+const panels = await Promise.all(tabs.map((tab) => Astro.slots.render(tab.id)));
+---
+
+<div data-tab-panels={group}>
+  {tabs.map((tab, i) => (
+    <section
+      role="tabpanel"
+      data-tab={tab.id}
+      id={`panel-${group}-${tab.id}`}
+      aria-labelledby={`tab-${group}-${tab.id}`}
+      tabindex="0"
+      hidden={i !== 0}
+      class="outline-none"
+    >
+      <h2 class="sr-only">{tab.label}</h2>
+      <Fragment set:html={panels[i]} />
+    </section>
+  ))}
+</div>
+
+<!-- No-JS: unhide every panel so the page reads as one long document, and
+     promote each panel's name from sr-only to a real heading.
+     `is:inline` keeps the style inside <noscript> — Astro would otherwise
+     hoist it into the global bundle and apply it unconditionally. -->
+<noscript>
+  <style is:inline>
+    [role='tabpanel'][hidden] { display: block !important; }
+    [role='tabpanel'] + [role='tabpanel'] { margin-top: 3rem; }
+    [role='tabpanel'] > h2.sr-only {
+      position: static; width: auto; height: auto; margin: 0 0 1rem;
+      clip-path: none; overflow: visible; white-space: normal;
+      font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;
+    }
+    [role='tablist'] { display: none !important; }
+  </style>
+</noscript>
+
+<script>
+  import '@/scripts/tabs';
+</script>
