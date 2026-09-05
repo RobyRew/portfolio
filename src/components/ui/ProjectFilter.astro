@@ -1,7 +1,11 @@
 ---
-/** Apple segmented-control filter. The grid stays the source of truth in the
+/** Apple filter chips. The grid stays the source of truth in the
  *  DOM, so the full list renders without JavaScript and the script only hides.
- *  Replaces a React island that did the same DOM work behind a runtime. */
+ *  Replaces a React island that did the same DOM work behind a runtime.
+ *
+ *  Chips rather than a segmented control: the tech list is variable-length and
+ *  wraps, and a segmented control does not wrap — its whole premise is equal
+ *  fixed segments in one row. Pressed state is .rw-chip[aria-pressed]. */
 interface Props { techs: string[]; showAllLabel: string; filterLabel: string }
 const { techs, showAllLabel, filterLabel } = Astro.props;
 const sorted = [...new Set(techs)].sort((a, b) => a.localeCompare(b));
@@ -9,38 +13,27 @@ const sorted = [...new Set(techs)].sort((a, b) => a.localeCompare(b));
 <div class="pf" data-project-filter>
   <span class="pf__label">{filterLabel}</span>
   <div class="pf__track" role="group" aria-label={filterLabel}>
-    <button type="button" class="pf__chip is-active" data-tech="" aria-pressed="true">{showAllLabel}</button>
+    <button type="button" class="rw-chip pf__chip" data-tech="" aria-pressed="true">{showAllLabel}</button>
     {sorted.map((tech) => (
-      <button type="button" class="pf__chip pf__chip--mono" data-tech={tech} aria-pressed="false">{tech}</button>
+      <button type="button" class="rw-chip pf__chip pf__chip--mono" data-tech={tech} aria-pressed="false">{tech}</button>
     ))}
   </div>
 </div>
 
 <style>
+  /* Chip appearance is .rw-chip in @robyrew/ui; only the row it sits in and the
+     one typographic variant are local. */
   .pf { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1.4rem; }
   .pf__label {
     font-family: var(--font-mono); font-size: .64rem; letter-spacing: .12em;
     text-transform: uppercase; color: var(--fg-2);
   }
-  /* One recessed track holding capsule chips — the iOS segmented control. */
-  .pf__track {
-    display: flex; flex-wrap: wrap; gap: .25rem; padding: .25rem;
-    background: var(--bg-2); border-radius: 999px;
-  }
-  .pf__chip {
-    border: 0; cursor: pointer; font: inherit; font-size: .72rem; font-weight: 600;
-    padding: .34rem .7rem; border-radius: 999px; color: var(--fg-2);
-    background: transparent; transition: background .16s, color .16s, transform .16s;
-  }
-  .pf__chip--mono { font-family: var(--font-mono); font-weight: 500; }
-  .pf__chip:hover { color: var(--fg); }
+  .pf__track { display: flex; flex-wrap: wrap; gap: .35rem; }
+  /* Tech names are identifiers, so they are set in the mono face — the same
+     treatment TechBadge gives them on the cards below. */
+  .pf__chip--mono { font-family: var(--font-mono); }
   .pf__chip:active { transform: scale(.96); }
-  .pf__chip.is-active {
-    color: var(--fg); background: var(--bg);
-    box-shadow: 0 1px 2px rgb(0 0 0 / .12), 0 0 0 1px var(--line);
-  }
-  .pf__chip:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { .pf__chip { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .pf__chip:active { transform: none; } }
 </style>
 
 <script>
@@ -55,9 +48,7 @@ const sorted = [...new Set(techs)].sort((a, b) => a.localeCompare(b));
         card.hidden = tech !== '' && !list.includes(tech);
       });
       chips.forEach((c) => {
-        const on = (c.dataset.tech ?? '') === tech;
-        c.classList.toggle('is-active', on);
-        c.setAttribute('aria-pressed', String(on));
+        c.setAttribute('aria-pressed', String((c.dataset.tech ?? '') === tech));
       });
       if (push) {
         const url = new URL(location.href);

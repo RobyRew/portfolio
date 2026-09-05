@@ -3,12 +3,16 @@
 @import '@fontsource-variable/inter/index.css';
 @import '@fontsource-variable/jetbrains-mono/index.css';
 
-/* ── Liquid glass ─────────────────────────────────────────────────
- * The material only: @robyrew/ui supplies .rw-glass, .rw-gl and the eleven
- * --t-* properties. The bridge below maps it onto this site's existing tokens
- * so the accent switcher and the [data-theme] bootstrap keep working unchanged.
+/* ── Liquid glass + Apple controls ────────────────────────────────
+ * tokens.css is the material: .rw-glass, .rw-gl and the eleven --t-* knobs.
+ * controls.css is the content layer that is NOT glass: .rw-card, .rw-field,
+ * .rw-btn, .rw-seg, .rw-chip, .rw-badge, .rw-switch.
+ *
+ * The bridge below maps both onto this site's existing tokens so the accent
+ * switcher and the [data-theme] bootstrap keep working unchanged.
  */
 @import '@robyrew/ui/tokens.css';
+@import '@robyrew/ui/controls.css';
 
 /* ── Tailwind v4 theme via CSS @theme directive ───────────────── */
 @theme {
@@ -155,17 +159,22 @@ body {
   font-style: italic;
 }
 
-/* ── Reusable card chrome ─────────────────────────────────────── */
+/* ── Card chrome ──────────────────────────────────────────────────
+ * The site's own card is now @robyrew/ui's .rw-card. `.card` stays as the
+ * alias its ten call sites already use.
+ *
+ * The hover that used to tint the border with the accent is gone: an edge that
+ * takes the accent colour on hover is not something Apple's language does, and
+ * it fired on static containers that were not clickable. Cards that DO go
+ * somewhere opt into the lift with .rw-card--interactive. */
 .card {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.card:hover {
-  border-color: color-mix(in oklch, var(--color-accent-500) 30%, var(--line));
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card);
+  --rw-r: var(--rw-r-card);
+  position: relative;
+  border-radius: var(--rw-r);
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  box-shadow: var(--rw-e1);
+  color: var(--ink);
 }
 
 /* ── Focus ring (visible only on keyboard nav) ────────────────── */
@@ -291,6 +300,37 @@ dialog.lightbox::backdrop {
   --g-ink: #14161c;
   --g-ink-dim: #4d5464;
   --g-ink-mute: #7c8394;
+}
+
+/* The controls layer reads --panel/--hair/--ink/--accent. This site already has
+ * equivalents under different names, so alias rather than duplicate: one set of
+ * values, and the accent switcher keeps driving the controls too.
+ *
+ * One block for every theme state, because the aliases resolve through: when
+ * [data-theme='dark'] re-points --bg and --fg, the controls follow with no
+ * second block. But the selector has to be able to WIN — tokens.css themes at
+ * :root[data-theme="light"] and :root:not([data-theme="dark"]), both (0,2,0),
+ * so a plain :root here (0,1,0) loses and the package's own palette stays in
+ * force: cards take Obsidian's hairline and, worse, --accent stays Obsidian
+ * blue so the accent switcher drives nothing below the glass layer. The pair
+ * below matches every state at (0,2,0) and comes later in source order. */
+:root:not([data-theme]),
+:root[data-theme] {
+  --panel:       var(--bg);
+  --ground:      var(--bg);
+  --ground-2:    var(--bg-2);
+  --hair:        var(--line);
+  --hair-soft:   color-mix(in oklab, var(--line) 55%, var(--bg));
+  --ink:         var(--fg);
+  --ink-2:       var(--fg-2);
+  --ink-3:       color-mix(in oklab, var(--fg-2) 72%, var(--bg));
+  --accent:      var(--color-accent-500);
+  --accent-soft: color-mix(in srgb, var(--color-accent-500) 12%, transparent);
+  --shadow-rgb:  0 0 0;
+
+  /* This site's cards were already 0.75rem; keep that rather than take the
+   * package default, so the existing layout spacing still reads as intended. */
+  --rw-r-card: var(--radius-card);
 }
 
 /* Glass samples what is behind it, so it needs somewhere to float. The page

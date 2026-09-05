@@ -10,10 +10,10 @@ import { Icon } from 'astro-icon/components';
  * pick up, so two of the three were decoration. This is the one control; the
  * panels live in TabPanels.astro and are matched by `group`.
  *
- * Shape follows the iOS segmented control: a recessed track inside the glass
- * layer — not a second glass surface on top of it — with a capsule that slides
- * to the selection. Concentric with the bar: the bar is a 999px capsule with
- * .5rem of padding, so the track and its thumb stay capsules too.
+ * Shape is @robyrew/ui's .rw-seg — a recessed well inside the glass layer, not
+ * a second glass surface on top of it, with one capsule that slides to the
+ * selection. Only the bar-specific bits are styled here: the glass ink colours
+ * (the well sits on glass, not on the page) and the compact icon-only mode.
  */
 export interface Tab {
   id: string;
@@ -29,19 +29,19 @@ const { tabs, ariaLabel, group } = Astro.props;
 ---
 
 <div
-  class="tb"
+  class="rw-seg tb"
   role="tablist"
   aria-label={ariaLabel}
   data-tab-group={group}
   style={`--n:${tabs.length}`}
 >
-  <span class="tb__thumb" aria-hidden="true"></span>
+  <span class="rw-seg__thumb" aria-hidden="true"></span>
   {tabs.map((tab, i) => (
     <button
       type="button"
       role="tab"
       id={`tab-${group}-${tab.id}`}
-      class="tb__seg"
+      class="rw-seg__item tb__seg"
       aria-controls={`panel-${group}-${tab.id}`}
       aria-selected={i === 0 ? 'true' : 'false'}
       tabindex={i === 0 ? 0 : -1}
@@ -54,82 +54,18 @@ const { tabs, ariaLabel, group } = Astro.props;
 </div>
 
 <style>
-  .tb {
-    position: relative;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    align-items: stretch;
-    flex: 1 1 auto;
-    min-width: 0;
-    padding: 0.1875rem;
-    border-radius: 999px;
-    /* Recessed into the glass, the way a segmented control sits in a toolbar:
-       a darker well, never another blurred layer on top of the first.
-       `data-theme` is always stamped before paint by the layout's inline
-       script, so the light override needs no media query. */
-    background: rgb(0 0 0 / 0.16);
-    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.18);
-  }
-  [data-theme='light'] .tb {
-    background: rgb(0 0 0 / 0.05);
-    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.07);
-  }
+  /* Layout inside the bar. The well itself, the thumb and the segment metrics
+     all come from .rw-seg in @robyrew/ui. */
+  .tb { flex: 1 1 auto; min-width: 0; }
 
-  .tb__seg {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    min-width: 0;
-    padding: 0.4rem 0.5rem;
-    border-radius: 999px;
-    font-size: 0.8125rem;
-    font-weight: 590;            /* SF's semibold-ish weight for controls */
-    letter-spacing: -0.005em;
-    color: var(--g-ink-dim);
-    cursor: pointer;
-    transition: color 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .tb__seg:hover { color: var(--g-ink); }
+  /* The well sits on the glass layer, so its labels take the glass ink ramp
+     rather than the page ink ramp — the backdrop behind glass is not the page. */
+  .tb__seg { color: var(--g-ink-dim); }
+  .tb__seg:hover,
   .tb__seg[aria-selected='true'] { color: var(--g-ink); }
-  .tb__seg:focus-visible {
-    outline: 2px solid var(--color-accent-500);
-    outline-offset: 1px;
-  }
+
   .tb__icon { height: 1rem; width: 1rem; flex: none; }
   .tb__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* The sliding capsule. One element translated by a custom property, so the
-     movement is a compositor transform rather than four elements repainting. */
-  .tb__thumb {
-    position: absolute;
-    top: 0.1875rem;
-    bottom: 0.1875rem;
-    left: 0.1875rem;
-    width: calc((100% - 0.375rem) / var(--n));
-    border-radius: 999px;
-    background: rgb(var(--rim-rgb) / 0.22);
-    box-shadow:
-      inset 0 1px 0 rgb(var(--rim-rgb) / 0.45),
-      0 1px 2px rgb(0 0 0 / 0.18);
-    transform: translateX(calc(var(--i, 0) * 100%));
-    transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-  /* On a light ground the thumb is a solid raised chip, as it is on iOS —
-     a translucent white over white glass reads as nothing. */
-  [data-theme='light'] .tb__thumb {
-    background: rgb(255 255 255 / 0.94);
-    box-shadow:
-      0 1px 3px rgb(0 0 0 / 0.13),
-      0 0 0 0.5px rgb(0 0 0 / 0.04);
-  }
-  /* Until the script runs there is no measured index; the thumb sits on the
-     first segment, which is the one marked selected in the markup. */
-  @media (prefers-reduced-motion: reduce) { .tb__thumb { transition: none; } }
 
   /* Compact: icons only, so four segments plus the utilities still fit a
      375px bar without the labels truncating to nothing. */
@@ -141,7 +77,7 @@ const { tabs, ariaLabel, group } = Astro.props;
       clip-path: inset(50%);
       white-space: nowrap;
     }
-    .tb__seg { padding: 0.4rem 0.25rem; }
+    .tb__seg { padding-inline: .25rem; }
   }
 
   @media print { .tb { display: none; } }
