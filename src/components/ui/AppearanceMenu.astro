@@ -27,9 +27,9 @@ const THEMES = [
 
   <div class="am__section">
     <span class="am__title">{labels.toggle}</span>
-    <div class="am__seg" role="group" aria-label={labels.toggle}>
+    <div class="am__seg" role="radiogroup" aria-label={labels.toggle}>
       {THEMES.map((t) => (
-        <button type="button" class="am__segbtn" data-theme-set={t.v} aria-pressed="false">
+        <button type="button" class="am__segbtn" role="radio" data-rw-theme-set={t.v} aria-checked="false">
           <span class="am__glyph" aria-hidden="true">{t.glyph}</span>
           <span>{labels[t.key]}</span>
         </button>
@@ -68,7 +68,7 @@ const THEMES = [
     background: transparent; transition: background .16s, color .16s;
   }
   .am__segbtn:hover { color: var(--fg); }
-  .am__segbtn[aria-pressed='true'] {
+  .am__segbtn[aria-checked='true'] {
     color: var(--fg); background: var(--bg);
     box-shadow: 0 1px 2px rgb(0 0 0 / .12), 0 0 0 1px var(--line);
   }
@@ -88,43 +88,31 @@ const THEMES = [
 </style>
 
 <script>
-  type Theme = 'light' | 'dark' | 'system';
+  // Theme choice: @robyrew/ui/theme.js binds every [data-rw-theme-set], stores
+  // the choice ("system" clears it), stamps data-theme, sets aria-checked on the
+  // role="radio" buttons and follows the OS while the choice is "system". It
+  // replaces the switch this component used to carry.
+  import { initThemeControls, ACCENT_KEY } from '@robyrew/ui/theme.js';
 
-  function applyTheme(t: Theme) {
-    const dark = t === 'dark' ||
-      (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  }
+  initThemeControls();
 
-  function sync() {
-    const theme = (localStorage.getItem('theme') as Theme | null) ?? 'system';
-    const accent = localStorage.getItem('accent');
-    document.querySelectorAll<HTMLButtonElement>('[data-theme-set]').forEach((b) =>
-      b.setAttribute('aria-pressed', String(b.dataset.themeSet === theme)));
+  // Accent stays site-specific: the package only copies localStorage.accent to
+  // data-accent before paint.
+  function syncAccent() {
+    let accent: string | null = null;
+    try { accent = localStorage.getItem(ACCENT_KEY); } catch { /* storage blocked */ }
     document.querySelectorAll<HTMLButtonElement>('[data-accent-set]').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.accentSet === accent)));
   }
 
   document.addEventListener('click', (e) => {
-    const t = (e.target as Element).closest<HTMLButtonElement>('[data-theme-set]');
-    if (t) {
-      const v = t.dataset.themeSet as Theme;
-      // 'system' is the absence of a preference, not a third stored value.
-      if (v === 'system') localStorage.removeItem('theme'); else localStorage.setItem('theme', v);
-      applyTheme(v); sync(); return;
-    }
     const a = (e.target as Element).closest<HTMLButtonElement>('[data-accent-set]');
-    if (a) {
-      localStorage.setItem('accent', a.dataset.accentSet!);
-      document.documentElement.setAttribute('data-accent', a.dataset.accentSet!);
-      sync();
-    }
+    if (!a) return;
+    const v = a.dataset.accentSet!;
+    try { localStorage.setItem(ACCENT_KEY, v); } catch { /* storage blocked */ }
+    document.documentElement.setAttribute('data-accent', v);
+    syncAccent();
   });
 
-  // Follow the OS while the user has expressed no preference.
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (!localStorage.getItem('theme')) applyTheme('system');
-  });
-
-  sync();
+  syncAccent();
 </script>

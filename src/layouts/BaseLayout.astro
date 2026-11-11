@@ -3,6 +3,7 @@ import type { Locale } from '@i18n/utils';
 import { DEFAULT_LOCALE, path, t, alternateLinks, LOCALES, localeIntl } from '@i18n/utils';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
+import { themeBootstrap } from '@robyrew/ui/theme.js';
 import '@/styles/global.css';
 
 export interface Props {
@@ -72,26 +73,10 @@ const umamiDomains = import.meta.env.PUBLIC_UMAMI_DOMAINS;
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- No-flash theme + accent: apply stored prefs BEFORE paint -->
-    <script is:inline>
-      (function () {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored || (prefersDark ? 'dark' : 'light');
-          document.documentElement.setAttribute('data-theme', theme);
-          const accent = localStorage.getItem('accent');
-          if (accent && ['mint', 'blue', 'violet', 'amber'].includes(accent)) {
-            document.documentElement.setAttribute('data-accent', accent);
-          }
-        } catch (_) {
-          // localStorage may be blocked — fall through to defaults.
-        } finally {
-          document.documentElement.classList.remove('theme-loading');
-          document.documentElement.classList.add('js');
-        }
-      })();
-    </script>
+    <!-- No-flash theme + accent: @robyrew/ui's pre-paint stamp. It sets data-theme
+         from localStorage.theme (or the OS), copies localStorage.accent to
+         data-accent, drops .theme-loading and adds .js. -->
+    <script is:inline set:html={themeBootstrap} />
 
     <!-- Umami analytics: cookie-less, GDPR-friendly, self-hosted. -->
     {umamiSrc && umamiId && (

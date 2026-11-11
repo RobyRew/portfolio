@@ -47,7 +47,7 @@
   --shadow-card: 0 1px 3px oklch(0% 0 0 / 0.08), 0 4px 12px oklch(0% 0 0 / 0.06);
 }
 
-/* ── Dark mode via data-attribute (set by AppearanceMenu island) ── */
+/* ── Dark mode via data-attribute (stamped by @robyrew/ui/theme.js) ── */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 /* ── Accent palettes (switchable via data-accent, persisted in localStorage) ──
@@ -271,39 +271,15 @@ dialog.lightbox::backdrop {
 
 
 /* ── Glass bridge ─────────────────────────────────────────────────
- * Obsidian's structure is kept exactly — alpha, blur, saturation, rim and
- * shadow are the values from the study. Only the material's BASE colour follows
- * the theme, so the chrome stays legible on a light page.
- *
- * To pin it smoked in both themes (true Obsidian), delete the [data-theme='light']
- * block below: the :root values already are the dark ones.
+ * The material itself (alpha, blur, rim, shadow, glass and ink colours for both
+ * themes) comes from @robyrew/ui/tokens.css. This file used to carry a copy of
+ * the 0.3 blue-tinted values plus a light-theme override; ui 0.4.0 ships a
+ * neutral dark glass and a frosted light one with dark ink, so the copy was
+ * removed. Only the fonts are the site's own.
  */
 :root {
-  --t-alpha: .52;
-  --t-blur: 30px;
-  --t-sat: 140%;
-  --t-rim: .30;
-  --t-sh-y: 16px;
-  --t-sh-blur: 38px;
-  --t-sh-a: .34;
-  --glass-rgb: 26 29 38;
-  --rim-rgb: 190 205 235;
-  --g-ink: #f4f6fb;
-  --g-ink-dim: #a4adc0;
-  --g-ink-mute: #737c8f;
   --g-font: var(--font-sans);
   --g-mono: var(--font-mono);
-}
-
-[data-theme='light'] {
-  --glass-rgb: 255 255 255;
-  --rim-rgb: 255 255 255;
-  --t-alpha: .62;
-  --t-rim: .70;
-  --t-sh-a: .12;
-  --g-ink: #14161c;
-  --g-ink-dim: #4d5464;
-  --g-ink-mute: #7c8394;
 }
 
 /* The controls layer reads --panel/--hair/--ink/--accent. This site already has
@@ -314,13 +290,12 @@ dialog.lightbox::backdrop {
  * [data-theme='dark'] re-points --bg and --fg, the controls follow with no
  * second block.
  *
- * The selector pair is what makes it win. It was needed because tokens.css
- * themes at :root[data-theme="light"], which is (0,2,0), and a plain :root
- * here (0,1,0) lost — leaving --accent as Obsidian blue, so the accent
- * switcher drove nothing below the glass layer. The layer(components) import
- * above now settles that on layer order instead, but the pair is kept: it
- * still reads as "every theme state", and it does not depend on the import
- * form staying layered. */
+ * The selector pair dates from ui 0.3, whose tokens.css themed at
+ * :root[data-theme="light"] (0,2,0) and beat a plain :root. ui 0.4.0 themes at
+ * [data-theme="light"], and the layer(components) import above puts the
+ * package below this file on layer order anyway; the pair is kept because it
+ * reads as "every theme state" and does not depend on the import staying
+ * layered. */
 :root:not([data-theme]),
 :root[data-theme] {
   --panel:       var(--bg);

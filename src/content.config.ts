@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 // ── Shared primitives ───────────────────────────────────────────────────
@@ -7,10 +8,10 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, 'YYYY-MM or YYYY-MM-D
 
 const linksSchema = z
   .object({
-    repo: z.string().url().optional(),
-    live: z.string().url().optional(),
-    demo: z.string().url().optional(),
-    appStore: z.string().url().optional(),
+    repo: z.url().optional(),
+    live: z.url().optional(),
+    demo: z.url().optional(),
+    appStore: z.url().optional(),
   })
   .strict()
   .optional();

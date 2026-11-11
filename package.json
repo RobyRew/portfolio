@@ -3,36 +3,37 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "Personal portfolio \u2014 cosmincalin.es",
+  "description": "Personal portfolio — cosmincalin.es",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "npm run check && astro build",
     "preview": "astro preview --host 0.0.0.0",
     "astro": "astro",
-    "check": "astro check",
+    "check": "astro sync && tsc --noEmit && node scripts/astro-check.mjs",
     "lint": "eslint . --ext .ts,.tsx,.astro",
-    "typecheck": "astro check && tsc --noEmit"
+    "typecheck": "npm run check"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
-    "@astrojs/sitemap": "^3.7.2",
-    "@fontsource-variable/inter": "^5.2.8",
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
-    "@robyrew/ui": "github:RobyRew/ui#v0.3.2",
-    "@tailwindcss/vite": "^4.3.0",
-    "astro": "^5.18.1",
-    "astro-icon": "^1.1.5",
-    "sharp": "^0.34.5",
-    "tailwindcss": "^4.3.0",
-    "zod": "^3.25.76"
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@robyrew/ui": "github:RobyRew/ui#v0.4.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.10",
+    "astro-icon": "^1.2.0",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.109",
-    "@iconify-json/simple-icons": "^1.2.69",
-    "typescript": "~5.9.3"
+    "@astrojs/language-server": "^2.17.3",
+    "@iconify-json/lucide": "^1.2.153",
+    "@iconify-json/simple-icons": "^1.2.102",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "typescript-6": "npm:typescript@^6.0.3"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=26"
   }
 }
