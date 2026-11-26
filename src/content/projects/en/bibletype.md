@@ -15,7 +15,6 @@ tech:
   - React Router
   - PWA
 links:
-  repo: https://github.com/robyrew/bibletype
   live: https://bible.robyrew.com
 ---
 

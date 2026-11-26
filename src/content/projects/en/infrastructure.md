@@ -22,8 +22,6 @@ tech:
   - auditd
   - Lynis
   - AppArmor
-links:
-  repo: https://github.com/robyrew/infrastructure
 ---
 
 The repository that runs my own production infrastructure on a 2 GB IONOS VPS — and the one I use as a teaching example for "what a small, defensible self-hosted stack looks like in 2026."

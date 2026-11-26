@@ -14,7 +14,7 @@ tech:
   - cfb
   - commander
 links:
-  repo: https://github.com/robyrew/js-ppt
+  repo: https://github.com/SheetJS/js-ppt
 ---
 
 A foundational library for parsing the legacy binary `.ppt` format from PowerPoint 97-2003. Cleanroom implementation built off Microsoft's Open Specifications, Apache 2.0 licensed.
