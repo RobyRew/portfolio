@@ -1,7 +1,7 @@
 ---
 locale: en
 company: T-Systems Iberia
-role: System Administrator N2 — SysOps
+role: System Administrator
 location: Reus, Spain
 employmentType: full-time
 startDate: 2024-01
@@ -25,7 +25,7 @@ tech:
   - BMC Control-M
   - BMC Server Automation
 highlights:
-  - Operate the international SysOps team for Deutsche Telekom Technik through T-Systems — Tier-2 incident handling across the Linux + Windows estate.
+  - Work on the international team for Deutsche Telekom Technik through T-Systems — Tier-2 incident handling across the Linux + Windows estate.
   - Deploy new application versions on Tomcat, WebLogic, Apache and IIS — both manually and orchestrated with Ansible playbooks.
   - Administer Oracle, MySQL, PostgreSQL, MongoDB and Microsoft SQL Server — user management, permissions, scheduled backups, scripted maintenance.
   - Install and update server software, configurations and access policies across the managed fleet.
@@ -33,7 +33,7 @@ highlights:
   - Write internal automation in Bash and JavaScript that removes manual toil from recurring tasks.
 ---
 
-Day-to-day Tier-2 SysOps for the Deutsche Telekom Technik infrastructure delivered through T-Systems Iberia. The work spans **application servers** (Tomcat / WebLogic / Apache / IIS), **databases** (Oracle, MySQL, PostgreSQL, MongoDB, SQL Server) and a healthy amount of **automation** (Ansible, Control-M, in-house scripts).
+Day-to-day Tier-2 systems administration for the Deutsche Telekom Technik infrastructure delivered through T-Systems Iberia. The work spans **application servers** (Tomcat / WebLogic / Apache / IIS), **databases** (Oracle, MySQL, PostgreSQL, MongoDB, SQL Server) and a healthy amount of **automation** (Ansible, Control-M, in-house scripts).
 
 The international team angle means: tickets in English with German stakeholders, runbooks shared across multiple data centres, and an operational tempo where small scripts that shave 15 minutes off a recurring task pay for themselves many times over.
 

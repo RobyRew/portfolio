@@ -12,7 +12,7 @@ Last updated: 2026-05-24
 2. Modern, interactive UX that holds up on **mobile and desktop equally** (touch, keyboard, mouse).
 3. Lighthouse 100 / 100 / 100 / 100. LCP < 1.5 s on a Moto G4 3G profile.
 4. Multi-language (matches the user's own languages — see open question Q1).
-5. Reflect current role: **System Administrator N2 — SysOps** at **T-Systems Iberia**, working on the international team for **Deutsche Telekom Technik**.
+5. Reflect current role: **System Administrator** at **T-Systems Iberia**, working on the international team for **Deutsche Telekom Technik**.
 6. Zero third-party scripts by default. CSP-clean. Vendored assets only.
 7. Deploys exactly the same way other apps do (Dockerfile → Dokploy → Traefik), so no infra change required.
 

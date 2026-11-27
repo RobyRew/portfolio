@@ -23,7 +23,7 @@ export const IDENTITY = {
   birthDate: '2001-04-06',
   email: 'cosmin.cg22@gmail.com',
   /** Used for JSON-LD and OpenGraph. */
-  jobTitle: 'System Administrator (SysOps)',
+  jobTitle: 'System Administrator',
   employer: 'T-Systems Iberia',
 } as const;
 
